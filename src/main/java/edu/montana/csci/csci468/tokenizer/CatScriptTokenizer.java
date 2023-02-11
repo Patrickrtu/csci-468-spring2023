@@ -46,6 +46,13 @@ public class CatScriptTokenizer {
                 return true;
             }
             while (!matchAndConsume('"') && !tokenizationEnd()) {
+                if(peek() == '"') {
+                    if (src.charAt(position-1) == '\\') {
+                        takeChar();
+                        continue;
+                    }
+                    break;
+                };
                 takeChar();
             }
             if (src.charAt(position-1) != '"') {
@@ -164,6 +171,7 @@ public class CatScriptTokenizer {
     private void consumeWhitespace() {
         // TODO update line and lineOffsets
         while (!tokenizationEnd()) {
+            lineOffset++;
             char c = peek();
             if (c == ' ' || c == '\r' || c == '\t') {
                 position++;
@@ -203,7 +211,6 @@ public class CatScriptTokenizer {
 
     private char takeChar() {
         char c = src.charAt(position);
-        lineOffset++;
         position++;
         return c;
     }
