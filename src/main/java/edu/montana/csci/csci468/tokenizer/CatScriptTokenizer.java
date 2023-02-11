@@ -42,17 +42,14 @@ public class CatScriptTokenizer {
         if(matchAndConsume('"')) {
             int start = position;
             if (tokenizationEnd()) {
-                tokenList.addToken(ERROR, "Unexpected End Quote", start, position, line, lineOffset);
+                tokenList.addToken(ERROR, "Unexpected End/Start Quote", start, position, line, lineOffset);
                 return true;
             }
-            while (!matchAndConsume('"') && !tokenizationEnd()) {
-                if(peek() == '"') {
-                    if (src.charAt(position-1) == '\\') {
-                        takeChar();
-                        continue;
-                    }
+            while (!tokenizationEnd()) {
+                if(peek() == '"' && src.charAt(position-1) != '\\') {
+                    takeChar();
                     break;
-                };
+                }
                 takeChar();
             }
             if (src.charAt(position-1) != '"') {
