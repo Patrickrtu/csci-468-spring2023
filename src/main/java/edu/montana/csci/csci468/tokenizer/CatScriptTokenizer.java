@@ -112,6 +112,44 @@ public class CatScriptTokenizer {
             tokenList.addToken(COMMA, ",", start, position, line, lineOffset);
         } else if(matchAndConsume(']')) {
             tokenList.addToken(RIGHT_BRACKET, "]", start, position, line, lineOffset);
+        } else if(matchAndConsume('(')) {
+            tokenList.addToken(LEFT_PAREN, "(", start, position, line, lineOffset);
+        } else if(matchAndConsume(')')) {
+            tokenList.addToken(RIGHT_PAREN, ")", start, position, line, lineOffset);
+        } else if(matchAndConsume('{')) {
+            tokenList.addToken(LEFT_BRACE, "{", start, position, line, lineOffset);
+        } else if(matchAndConsume('}')) {
+            tokenList.addToken(RIGHT_BRACE, "}", start, position, line, lineOffset);
+        } else if(matchAndConsume(':')) {
+            tokenList.addToken(COLON, ":", start, position, line, lineOffset);
+        } else if(matchAndConsume('.')) {
+            tokenList.addToken(DOT, ".", start, position, line, lineOffset);
+        } else if(matchAndConsume('*')) {
+            tokenList.addToken(STAR, "*", start, position, line, lineOffset);
+        } else if(matchAndConsume('!')) {
+            if(matchAndConsume('='))
+            tokenList.addToken(BANG_EQUAL, "!=", start, position, line, lineOffset);
+        } else if(matchAndConsume('>')) {
+            if(matchAndConsume('=')) {
+                tokenList.addToken(GREATER_EQUAL, ">=", start, position, line, lineOffset);
+                return;
+            }
+            tokenList.addToken(GREATER, ">", start, position, line, lineOffset);
+        } else if(matchAndConsume('<')) {
+            if(matchAndConsume('=')) {
+                tokenList.addToken(LESS_EQUAL, "<=", start, position, line, lineOffset);
+                return;
+            }
+            tokenList.addToken(LESS, "<", start, position, line, lineOffset);
+        } else if(matchAndConsume('!')) {
+            if(matchAndConsume('='))
+                tokenList.addToken(BANG_EQUAL, "!=", start, position, line, lineOffset);
+        } else if(matchAndConsume('!')) {
+            if(matchAndConsume('='))
+                tokenList.addToken(BANG_EQUAL, "!=", start, position, line, lineOffset);
+        } else if(matchAndConsume('!')) {
+            if(matchAndConsume('='))
+                tokenList.addToken(BANG_EQUAL, "!=", start, position, line, lineOffset);
         } else if(matchAndConsume('=')) {
             if (matchAndConsume('=')) {
                 tokenList.addToken(EQUAL_EQUAL, "==", start, position, line, lineOffset);
