@@ -39,12 +39,18 @@ public class CatScriptTokenizer {
     }
 
     private boolean scanString() {
-        // TODO implement string scanning here!
         if(matchAndConsume('"')) {
             int start = position;
-            // if nothing follows a '"', finish
-            while (!matchAndConsume('"')) {
+            if (tokenizationEnd()) {
+                tokenList.addToken(ERROR, "Unexpected End Quote", start, position, line, lineOffset);
+                return true;
+            }
+            while (!matchAndConsume('"') && !tokenizationEnd()) {
                 takeChar();
+            }
+            if (src.charAt(position-1) != '"') {
+                tokenList.addToken(ERROR, "Expected End Quote", start, position, line, lineOffset);
+                return true;
             }
             String value = src.substring(start, position - 1);
             tokenList.addToken(STRING, value, start, position, line, lineOffset);
