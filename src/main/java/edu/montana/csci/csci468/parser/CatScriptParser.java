@@ -136,10 +136,15 @@ public class CatScriptParser {
         } else if (tokens.match(LEFT_PAREN)){
             // TODO
             // call to parse expression
-            Token stringToken = tokens.consumeToken();
-            IntegerLiteralExpression integerExpression = new IntegerLiteralExpression(stringToken.getStringValue());
-            return integerExpression;
-
+            Token leftParenToken = tokens.consumeToken();
+            Expression expression = parseExpression();
+            if (tokens.match(RIGHT_PAREN)) {
+                Token rightParenToken = tokens.consumeToken();
+                ParenthesizedExpression parenExpression = new ParenthesizedExpression(expression);
+                return parenExpression;
+            }
+            SyntaxErrorExpression syntaxErrorExpression = new SyntaxErrorExpression(tokens.consumeToken());
+            return syntaxErrorExpression;
         } else if (tokens.match(IDENTIFIER)){
             // TODO
             Token identifier = tokens.consumeToken();
@@ -197,9 +202,13 @@ public class CatScriptParser {
                     Token end = tokens.consumeToken();
                     ListLiteralExpression listExpression = new ListLiteralExpression(list);
                     return listExpression;
-
                 }
             } while (tokens.matchAndConsume(COMMA));
+            if (tokens.match(EOF)) {
+                ListLiteralExpression listExpression = new ListLiteralExpression(list);
+                listExpression.addError(ErrorType.UNTERMINATED_LIST);
+                return listExpression;
+            }
         }
         return null;
     }
