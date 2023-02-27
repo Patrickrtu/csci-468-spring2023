@@ -84,27 +84,57 @@ public class CatScriptParser {
     //============================================================
 
     private Expression parseExpression() {
-        //return parseAdditiveExpression();
         return parseEqualityExpression();
     }
 
     private Expression parseEqualityExpression() {
-        return parseComparisonExpression();
+        Expression expression = parseComparisonExpression();
+        while (tokens.match(EQUAL_EQUAL, BANG_EQUAL)) {
+            Token operator = tokens.consumeToken();
+            final Expression rightHandSide = parseComparisonExpression();
+            EqualityExpression equalityExpression = new EqualityExpression(operator, expression, rightHandSide);
+            equalityExpression.setStart(expression.getStart());
+            equalityExpression.setEnd(rightHandSide.getEnd());
+            expression = equalityExpression;
+        }
+        return expression;
     }
 
     private Expression parseComparisonExpression() {
-        return parseAdditiveExpression();
+        Expression expression = parseAdditiveExpression();
+        while (tokens.match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
+            Token operator = tokens.consumeToken();
+            final Expression rightHandSide = parseAdditiveExpression();
+            ComparisonExpression comparisonExpression = new ComparisonExpression(operator, expression, rightHandSide);
+            comparisonExpression.setStart(expression.getStart());
+            comparisonExpression.setEnd(rightHandSide.getEnd());
+            expression = comparisonExpression;
+        }
+        return expression;
     }
 
     private Expression parseAdditiveExpression() {
-        Expression expression = parseUnaryExpression();
+        Expression expression = parseFactorExpression();
         while (tokens.match(PLUS, MINUS)) {
             Token operator = tokens.consumeToken();
-            final Expression rightHandSide = parseUnaryExpression();
+            final Expression rightHandSide = parseFactorExpression();
             AdditiveExpression additiveExpression = new AdditiveExpression(operator, expression, rightHandSide);
             additiveExpression.setStart(expression.getStart());
             additiveExpression.setEnd(rightHandSide.getEnd());
             expression = additiveExpression;
+        }
+        return expression;
+    }
+
+    private Expression parseFactorExpression() {
+        Expression expression = parseUnaryExpression();
+        while (tokens.match(STAR, SLASH)) {
+            Token operator = tokens.consumeToken();
+            final Expression rightHandSide = parseUnaryExpression();
+            FactorExpression factorExpression = new FactorExpression(operator, expression, rightHandSide);
+            factorExpression.setStart(expression.getStart());
+            factorExpression.setEnd(rightHandSide.getEnd());
+            expression = factorExpression;
         }
         return expression;
     }
@@ -134,8 +164,6 @@ public class CatScriptParser {
             stringExpression.setToken(stringToken);
             return stringExpression;
         } else if (tokens.match(LEFT_PAREN)){
-            // TODO
-            // call to parse expression
             Token leftParenToken = tokens.consumeToken();
             Expression expression = parseExpression();
             if (tokens.match(RIGHT_PAREN)) {
