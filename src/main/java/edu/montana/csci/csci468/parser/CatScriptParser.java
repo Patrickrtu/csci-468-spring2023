@@ -179,9 +179,8 @@ public class CatScriptParser {
             if (tokens.match(LEFT_PAREN)) {
                 return parseFunctionCall(identifier);
             } else {
-                // TODO
-                //return identifier expression;
-                return parseAdditiveExpression();
+                IdentifierExpression identifierExpression = new IdentifierExpression(identifier.getStringValue());
+                return identifierExpression;
             }
         } else if (tokens.match(TRUE)){
             Token booleanToken = tokens.consumeToken();
@@ -206,7 +205,32 @@ public class CatScriptParser {
         }
     }
 
+    // still not sure about setStart XD
     private Expression parseFunctionCall(Token identifier) {
+        Token leftParen = tokens.consumeToken();
+        LinkedList<Expression> list = new LinkedList<Expression>();
+        // if the argumentList is empty
+        if (tokens.match(RIGHT_PAREN)) {
+            Token rightParen = tokens.consumeToken();
+            FunctionCallExpression functionCallExpression = new FunctionCallExpression(identifier.getStringValue(),list);
+            return functionCallExpression;
+        }
+        // we have some number of argument expressions, which implies a while loop
+        do {
+            Expression expression = parseExpression();
+            list.push(expression);
+            if (tokens.match(RIGHT_PAREN)) {
+                Token rightParen = tokens.consumeToken();
+                FunctionCallExpression functionCallExpression = new FunctionCallExpression(identifier.getStringValue(), list);
+                return functionCallExpression;
+            }
+        } while (tokens.matchAndConsume(COMMA));
+
+        if (tokens.match(EOF)) {
+            FunctionCallExpression functionCallExpression = new FunctionCallExpression(identifier.getStringValue(), list);
+            functionCallExpression.addError(ErrorType.UNTERMINATED_ARG_LIST);
+            return functionCallExpression;
+        }
         return null;
     }
 
@@ -219,7 +243,6 @@ public class CatScriptParser {
             if (tokens.match(RIGHT_BRACKET)) {
                 Token end = tokens.consumeToken();
                 ListLiteralExpression listExpression = new ListLiteralExpression(list);
-                listExpression.setStart(end);
                 return listExpression;
             }
             // we have some number of expressions, which implies a while loop
