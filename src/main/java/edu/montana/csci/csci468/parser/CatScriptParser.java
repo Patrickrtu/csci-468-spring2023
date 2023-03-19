@@ -113,12 +113,49 @@ public class CatScriptParser {
         if (forStmt != null) {
             return forStmt;
         }
+        Statement ifStmt = parseIfStatement();
+        if (ifStmt != null) {
+            return ifStmt;
+        }
         Statement returnStmt = parseReturnStatement();
         if (printStmt != null) {
             return printStmt;
         }
         Statement assignmentOrFuncCall = parseAssignmentOrFunctionCallStatement();
         return new SyntaxErrorStatement(tokens.consumeToken());
+    }
+
+    private Statement parseIfStatement() {
+        if (tokens.match(IF)){
+            IfStatement ifStatement = new IfStatement();
+            ifStatement.setStart(tokens.consumeToken());
+            require(LEFT_PAREN, ifStatement);
+            ifStatement.setExpression(parseExpression());
+            require(RIGHT_PAREN, ifStatement);
+            require(LEFT_BRACE, ifStatement);
+            LinkedList<Statement> statements = new LinkedList<Statement>();
+            while(!tokens.match(RIGHT_BRACE) && tokens.hasMoreTokens()){
+                Statement statement = parseStatement();
+                statements.add(statement);
+            }
+            ifStatement.setTrueStatements(statements);
+            Token end = require(RIGHT_BRACE, ifStatement);
+            if (tokens.match(ELSE)) {
+                parseIfStatement();
+                require(LEFT_BRACE, ifStatement);
+                LinkedList<Statement> elseStatements = new LinkedList<Statement>();
+                while(!tokens.match(RIGHT_BRACE) && tokens.hasMoreTokens()){
+                    Statement statement = parseStatement();
+                    elseStatements.add(statement);
+                }
+                ifStatement.setElseStatements(elseStatements);
+                end = require(RIGHT_BRACE, ifStatement);
+            }
+            ifStatement.setEnd(end);
+            return ifStatement;
+        } else {
+            return null;
+        }
     }
 
     private Statement parseAssignmentOrFunctionCallStatement() {
@@ -153,8 +190,8 @@ public class CatScriptParser {
             forStatement.setStart(tokens.consumeToken());
             require(LEFT_PAREN, forStatement);
             // require a loop identifier
-            String variableName = String.valueOf(require(IDENTIFIER, forStatement));
-            forStatement.setVariableName(variableName);
+            Token identifier = require(IDENTIFIER, forStatement);
+            forStatement.setVariableName(identifier.getStringValue());
             // require 'in'    for(x in ...)
             require(IN, forStatement);
             // ... is going to be a parseExpression()
@@ -162,62 +199,16 @@ public class CatScriptParser {
             require(RIGHT_PAREN, forStatement);
             // require {
             require(LEFT_BRACE, forStatement);
-            Statement statement;
             LinkedList<Statement> statements = new LinkedList<Statement>();
             while(!tokens.match(RIGHT_BRACE) && tokens.hasMoreTokens()){
-                statement = parseStatement();
+                Statement statement = parseStatement();
                 statements.add(statement);
             }
             forStatement.setBody(statements);
-
-            //forStatement.setExpression();
-            // get from identifier
-            //forStatement.setVariableName();
-        }
-        // otherwise return null
-        return null;
-
-
-
-
-
-        if (tokens.match(PRINT)) {
-
-            PrintStatement printStatement = new PrintStatement();
-            printStatement.setStart(tokens.consumeToken());
-
-            require(LEFT_PAREN, printStatement);
-            printStatement.setExpression(parseExpression());
-            printStatement.setEnd(require(RIGHT_PAREN, printStatement));
-
-            return printStatement;
+            forStatement.setEnd(require(RIGHT_BRACE, forStatement));
+            return forStatement;
         } else {
             return null;
-        }
-
-
-
-
-        if (tokens.match(RIGHT_PAREN)) {
-            Token rightParen = tokens.consumeToken();
-            FunctionCallExpression functionCallExpression = new FunctionCallExpression(identifier.getStringValue(),list);
-            return functionCallExpression;
-        }
-        // we have some number of argument expressions, which implies a while loop
-        do {
-            Expression expression = parseExpression();
-            list.push(expression);
-            if (tokens.match(RIGHT_PAREN)) {
-                Token rightParen = tokens.consumeToken();
-                FunctionCallExpression functionCallExpression = new FunctionCallExpression(identifier.getStringValue(), list);
-                return functionCallExpression;
-            }
-        } while (tokens.matchAndConsume(COMMA));
-
-        if (tokens.match(EOF)) {
-            FunctionCallExpression functionCallExpression = new FunctionCallExpression(identifier.getStringValue(), list);
-            functionCallExpression.addError(ErrorType.UNTERMINATED_ARG_LIST);
-            return functionCallExpression;
         }
     }
 
