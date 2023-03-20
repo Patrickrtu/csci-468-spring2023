@@ -32,24 +32,12 @@
 [INFO] Running edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest
 [INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s - in edu.montana.csci.csci468.tokenizer.CatScriptTokenizerTest
 [INFO] Running edu.montana.csci.csci468.parser.CatscriptParserStatementsTest
-[ERROR] Tests run: 21, Failures: 0, Errors: 7, Skipped: 0, Time elapsed: 0.011 s <<< FAILURE! - in edu.montana.csci.csci468.parser.CatscriptParserStatementsTest
-[ERROR] functionDefStatement  Time elapsed: 0.002 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function x() {}
-                    ^
-
-Error: Unexpected Token
-
-
+[ERROR] Tests run: 21, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 0.014 s <<< FAILURE! - in edu.montana.csci.csci468.parser.CatscriptParserStatementsTest
+[ERROR] functionDefStatement  Time elapsed: 0.001 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.parser.CatscriptParserStatementsTest.functionDefStatement(CatscriptParserStatementsTest.java:144)
 
-[ERROR] functionCallStatement  Time elapsed: 0.001 s  <<< ERROR!
-java.lang.ClassCastException: class edu.montana.csci.csci468.parser.statements.SyntaxErrorStatement cannot be cast to class edu.montana.csci.csci468.parser.statements.FunctionCallStatement (edu.montana.csci.csci468.parser.statements.SyntaxErrorStatement and edu.montana.csci.csci468.parser.statements.FunctionCallStatement are in unnamed module of loader 'app')
-	at edu.montana.csci.csci468.parser.CatscriptParserStatementsTest.functionCallStatement(CatscriptParserStatementsTest.java:136)
-
-[ERROR] functionDefWithParamsStatement  Time elapsed: 0 s  <<< ERROR!
+[ERROR] functionDefWithParamsStatement  Time elapsed: 0.004 s  <<< ERROR!
 edu.montana.csci.csci468.parser.ParseErrorException: 
 Parse Errors Occurred:
 
@@ -61,50 +49,22 @@ Error: Unexpected Token
 
 	at edu.montana.csci.csci468.parser.CatscriptParserStatementsTest.functionDefWithParamsStatement(CatscriptParserStatementsTest.java:152)
 
-[ERROR] assigmentStatement  Time elapsed: 0 s  <<< ERROR!
-java.lang.ClassCastException: class edu.montana.csci.csci468.parser.statements.SyntaxErrorStatement cannot be cast to class edu.montana.csci.csci468.parser.statements.AssignmentStatement (edu.montana.csci.csci468.parser.statements.SyntaxErrorStatement and edu.montana.csci.csci468.parser.statements.AssignmentStatement are in unnamed module of loader 'app')
-	at edu.montana.csci.csci468.parser.CatscriptParserStatementsTest.assigmentStatement(CatscriptParserStatementsTest.java:128)
-
-[ERROR] functionDefWithParamTypesStatement  Time elapsed: 0.001 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function x(a : object, b : int, c : bool) {}
-                                                 ^
-
-Error: Unexpected Token
-
-
+[ERROR] functionDefWithParamTypesStatement  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.parser.CatscriptParserStatementsTest.functionDefWithParamTypesStatement(CatscriptParserStatementsTest.java:166)
 
-[ERROR] returnStatementNoExprInFunction  Time elapsed: 0.001 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function x() {return}
-                          ^
-
-Error: Unexpected Token
-
-
+[ERROR] returnStatementNoExprInFunction  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.parser.CatscriptParserStatementsTest.returnStatementNoExprInFunction(CatscriptParserStatementsTest.java:180)
 
-[ERROR] returnStatementExprInFunction  Time elapsed: 0 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function x() : int {return 10}
-                                   ^
-
-Error: Unexpected Token
-
-
+[ERROR] returnStatementExprInFunction  Time elapsed: 0.001 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.parser.CatscriptParserStatementsTest.returnStatementExprInFunction(CatscriptParserStatementsTest.java:189)
 
 [INFO] Running edu.montana.csci.csci468.parser.CatscriptParserTypeCheckingTest
-[ERROR] Tests run: 10, Failures: 2, Errors: 3, Skipped: 0, Time elapsed: 0.002 s <<< FAILURE! - in edu.montana.csci.csci468.parser.CatscriptParserTypeCheckingTest
+[ERROR] Tests run: 10, Failures: 2, Errors: 3, Skipped: 0, Time elapsed: 0.004 s <<< FAILURE! - in edu.montana.csci.csci468.parser.CatscriptParserTypeCheckingTest
 [ERROR] functionCallsWorkProperly  Time elapsed: 0 s  <<< ERROR!
-java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.parser.CatscriptParserTypeCheckingTest.functionCallsWorkProperly(CatscriptParserTypeCheckingTest.java:38)
 
 [ERROR] identifiersWorkProperly  Time elapsed: 0 s  <<< ERROR!
@@ -116,10 +76,10 @@ org.opentest4j.AssertionFailedError: expected: <int> but was: <null>
 	at edu.montana.csci.csci468.parser.CatscriptParserTypeCheckingTest.typeInferenceWorksForVars(CatscriptParserTypeCheckingTest.java:45)
 
 [ERROR] assignmentTypeError  Time elapsed: 0 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: <Incompatible types> but was: <Unexpected Token>
+org.opentest4j.AssertionFailedError: expected: <Incompatible types> but was: <This symbol is not defined>
 	at edu.montana.csci.csci468.parser.CatscriptParserTypeCheckingTest.assignmentTypeError(CatscriptParserTypeCheckingTest.java:55)
 
-[ERROR] varTypeError  Time elapsed: 0.001 s  <<< ERROR!
+[ERROR] varTypeError  Time elapsed: 0.002 s  <<< ERROR!
 java.lang.IllegalStateException: The code var x : bool = 10 did not throw an error!
 	at edu.montana.csci.csci468.parser.CatscriptParserTypeCheckingTest.varTypeError(CatscriptParserTypeCheckingTest.java:50)
 
@@ -130,7 +90,7 @@ java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenize
 	at edu.montana.csci.csci468.parser.CatscriptParserErrorsTest.basicSymbolErrorWorks(CatscriptParserErrorsTest.java:15)
 
 [INFO] Running edu.montana.csci.csci468.parser.CatscriptParserSymbolCheckingTest
-[ERROR] Tests run: 8, Failures: 4, Errors: 4, Skipped: 0, Time elapsed: 0.004 s <<< FAILURE! - in edu.montana.csci.csci468.parser.CatscriptParserSymbolCheckingTest
+[ERROR] Tests run: 8, Failures: 1, Errors: 7, Skipped: 0, Time elapsed: 0.001 s <<< FAILURE! - in edu.montana.csci.csci468.parser.CatscriptParserSymbolCheckingTest
 [ERROR] paramsConflictWithGlobalVars  Time elapsed: 0 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <This name is already used in this program> but was: <Unexpected Token>
 	at edu.montana.csci.csci468.parser.CatscriptParserSymbolCheckingTest.paramsConflictWithGlobalVars(CatscriptParserSymbolCheckingTest.java:46)
@@ -174,25 +134,25 @@ Error: Unexpected Token
 
 	at edu.montana.csci.csci468.parser.CatscriptParserSymbolCheckingTest.paramsDoNotConflictWithEachOther(CatscriptParserSymbolCheckingTest.java:52)
 
-[ERROR] duplicateVarsErrors  Time elapsed: 0.002 s  <<< ERROR!
+[ERROR] duplicateVarsErrors  Time elapsed: 0 s  <<< ERROR!
 java.lang.IllegalStateException: 
 The code var x = 10
 var x = 12 did not throw an error!
 	at edu.montana.csci.csci468.parser.CatscriptParserSymbolCheckingTest.duplicateVarsErrors(CatscriptParserSymbolCheckingTest.java:16)
 
-[ERROR] functionVarConflict  Time elapsed: 0.001 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: <This name is already used in this program> but was: <Unexpected Token>
+[ERROR] functionVarConflict  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.parser.CatscriptParserSymbolCheckingTest.functionVarConflict(CatscriptParserSymbolCheckingTest.java:28)
 
-[ERROR] functionFunctionConflict  Time elapsed: 0 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: <This name is already used in this program> but was: <Unexpected Token>
+[ERROR] functionFunctionConflict  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.parser.CatscriptParserSymbolCheckingTest.functionFunctionConflict(CatscriptParserSymbolCheckingTest.java:34)
 
-[ERROR] varFunctionConflict  Time elapsed: 0 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: <This name is already used in this program> but was: <Unexpected Token>
+[ERROR] varFunctionConflict  Time elapsed: 0.001 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.parser.CatscriptParserSymbolCheckingTest.varFunctionConflict(CatscriptParserSymbolCheckingTest.java:22)
 
-[ERROR] forVarConflict  Time elapsed: 0.001 s  <<< ERROR!
+[ERROR] forVarConflict  Time elapsed: 0 s  <<< ERROR!
 java.lang.IllegalStateException: 
 The code var x = 10
 for(x in []){ print(x) } did not throw an error!
@@ -201,32 +161,9 @@ for(x in []){ print(x) } did not throw an error!
 [INFO] Running edu.montana.csci.csci468.parser.CatscriptParserExpressionsTest
 [INFO] Tests run: 29, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s - in edu.montana.csci.csci468.parser.CatscriptParserExpressionsTest
 [INFO] Running edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest
-[ERROR] Tests run: 9, Failures: 0, Errors: 9, Skipped: 0, Time elapsed: 0.006 s <<< FAILURE! - in edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest
-[ERROR] recursiveFunctionWorksProperly  Time elapsed: 0.003 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 2:print(x)if(x > 0) {  foo(x - 1)}}
-                                      ^
-
-Error: Unexpected Token
-
-Line 3:foo(9)
-         ^
-
-Error: Unexpected Token
-
-Line 3:foo(9)
-          ^
-
-Error: Unexpected Token
-
-Line 3:foo(9)
-           ^
-
-Error: Unexpected Token
-
-
+[ERROR] Tests run: 9, Failures: 0, Errors: 9, Skipped: 0, Time elapsed: 0.005 s <<< FAILURE! - in edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest
+[ERROR] recursiveFunctionWorksProperly  Time elapsed: 0.001 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest.recursiveFunctionWorksProperly(CatscriptStatementExecutionTest.java:75)
 
 [ERROR] localVarStatementsWorkProperly  Time elapsed: 0 s  <<< ERROR!
@@ -238,71 +175,18 @@ java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenize
 	at edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest.varStatementWorksProperly(CatscriptStatementExecutionTest.java:32)
 
 [ERROR] functionDeclarationWorksProperly  Time elapsed: 0 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function foo(x) { print(x) }
-                                 ^
-
-Error: Unexpected Token
-
-Line 2:foo(1)
-         ^
-
-Error: Unexpected Token
-
-Line 2:foo(1)
-          ^
-
-Error: Unexpected Token
-
-Line 2:foo(1)
-           ^
-
-Error: Unexpected Token
-
-Line 3:foo(2)
-         ^
-
-Error: Unexpected Token
-
-Line 3:foo(2)
-          ^
-
-Error: Unexpected Token
-
-Line 3:foo(2)
-           ^
-
-Error: Unexpected Token
-
-Line 4:foo(3)
-         ^
-
-Error: Unexpected Token
-
-Line 4:foo(3)
-          ^
-
-Error: Unexpected Token
-
-Line 4:foo(3)
-           ^
-
-Error: Unexpected Token
-
-
+java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
 	at edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest.functionDeclarationWorksProperly(CatscriptStatementExecutionTest.java:66)
 
-[ERROR] returnStatementWorks  Time elapsed: 0.001 s  <<< ERROR!
-java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
+[ERROR] returnStatementWorks  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest.returnStatementWorks(CatscriptStatementExecutionTest.java:88)
 
 [ERROR] varInsideFunctionWorksProperly  Time elapsed: 0 s  <<< ERROR!
-java.lang.IndexOutOfBoundsException: Index 21 out of bounds for length 21
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest.varInsideFunctionWorksProperly(CatscriptStatementExecutionTest.java:51)
 
-[ERROR] ifStatementWorksProperly  Time elapsed: 0.001 s  <<< ERROR!
+[ERROR] ifStatementWorksProperly  Time elapsed: 0.002 s  <<< ERROR!
 java.lang.UnsupportedOperationException: execute needs to be implemented for edu.montana.csci.csci468.parser.statements.IfStatement
 	at edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest.ifStatementWorksProperly(CatscriptStatementExecutionTest.java:24)
 
@@ -310,12 +194,12 @@ java.lang.UnsupportedOperationException: execute needs to be implemented for edu
 java.lang.UnsupportedOperationException: execute needs to be implemented for edu.montana.csci.csci468.parser.statements.ForStatement
 	at edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest.forStatementWorksProperly(CatscriptStatementExecutionTest.java:61)
 
-[ERROR] printStatementWorksProperly  Time elapsed: 0 s  <<< ERROR!
+[ERROR] printStatementWorksProperly  Time elapsed: 0.001 s  <<< ERROR!
 java.lang.UnsupportedOperationException: evaluate needs to be implemented for edu.montana.csci.csci468.parser.expressions.BooleanLiteralExpression
 	at edu.montana.csci.csci468.eval.CatscriptStatementExecutionTest.printStatementWorksProperly(CatscriptStatementExecutionTest.java:18)
 
 [INFO] Running edu.montana.csci.csci468.eval.CatscriptBasicExpressionEvalTest
-[ERROR] Tests run: 8, Failures: 0, Errors: 6, Skipped: 0, Time elapsed: 0 s <<< FAILURE! - in edu.montana.csci.csci468.eval.CatscriptBasicExpressionEvalTest
+[ERROR] Tests run: 8, Failures: 0, Errors: 6, Skipped: 0, Time elapsed: 0.001 s <<< FAILURE! - in edu.montana.csci.csci468.eval.CatscriptBasicExpressionEvalTest
 [ERROR] comparisonExpressionEvaluatesProperly  Time elapsed: 0 s  <<< ERROR!
 java.lang.UnsupportedOperationException: evaluate needs to be implemented for edu.montana.csci.csci468.parser.expressions.ComparisonExpression
 	at edu.montana.csci.csci468.eval.CatscriptBasicExpressionEvalTest.comparisonExpressionEvaluatesProperly(CatscriptBasicExpressionEvalTest.java:51)
@@ -341,336 +225,69 @@ java.lang.UnsupportedOperationException: evaluate needs to be implemented for ed
 	at edu.montana.csci.csci468.eval.CatscriptBasicExpressionEvalTest.literalExpressionsEvaluatesProperly(CatscriptBasicExpressionEvalTest.java:15)
 
 [INFO] Running edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest
-[ERROR] Tests run: 14, Failures: 0, Errors: 14, Skipped: 0, Time elapsed: 0.004 s <<< FAILURE! - in edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest
+[ERROR] Tests run: 14, Failures: 0, Errors: 14, Skipped: 0, Time elapsed: 0.003 s <<< FAILURE! - in edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest
 [ERROR] listTypeWithComponentTypeArgWorksProperly  Time elapsed: 0 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function foo(x : list<int>) { print(x) }foo([1, 2, 3])
-                                             ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list<int>) { print(x) }foo([1, 2, 3])
-                                                 ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list<int>) { print(x) }foo([1, 2, 3])
-                                                  ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list<int>) { print(x) }foo([1, 2, 3])
-                                                   ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list<int>) { print(x) }foo([1, 2, 3])
-                                                    ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list<int>) { print(x) }foo([1, 2, 3])
-                                                      ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list<int>) { print(x) }foo([1, 2, 3])
-                                                       ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list<int>) { print(x) }foo([1, 2, 3])
-                                                         ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list<int>) { print(x) }foo([1, 2, 3])
-                                                          ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list<int>) { print(x) }foo([1, 2, 3])
-                                                           ^
-
-Error: Unexpected Token
-
-
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.listTypeWithComponentTypeArgWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:56)
 
 [ERROR] stringTypeArgWorksProperly  Time elapsed: 0 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function foo(x : string) { print(x) }foo("foo")
-                                          ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : string) { print(x) }foo("foo")
-                                              ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : string) { print(x) }foo("foo")
-                                                ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : string) { print(x) }foo("foo")
-                                                    ^
-
-Error: Unexpected Token
-
-
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.stringTypeArgWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:44)
 
 [ERROR] noTypeArgWorksProperly  Time elapsed: 0 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function foo(x) { print(x) }foo(1)
-                                 ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x) { print(x) }foo(1)
-                                     ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x) { print(x) }foo(1)
-                                      ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x) { print(x) }foo(1)
-                                       ^
-
-Error: Unexpected Token
-
-
+java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.noTypeArgWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:20)
 
 [ERROR] mutliArgumentFunctionsWork  Time elapsed: 0 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function foo(x, y, z) { print(x) }foo(1, 2, 3)
-                                       ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x, y, z) { print(x) }foo(1, 2, 3)
-                                           ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x, y, z) { print(x) }foo(1, 2, 3)
-                                            ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x, y, z) { print(x) }foo(1, 2, 3)
-                                             ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x, y, z) { print(x) }foo(1, 2, 3)
-                                               ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x, y, z) { print(x) }foo(1, 2, 3)
-                                                ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x, y, z) { print(x) }foo(1, 2, 3)
-                                                  ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x, y, z) { print(x) }foo(1, 2, 3)
-                                                   ^
-
-Error: Unexpected Token
-
-
+java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.mutliArgumentFunctionsWork(CatscriptFunctionArgsAndReturnEvalTest.java:62)
 
 [ERROR] returnBoolWorksProperly  Time elapsed: 0 s  <<< ERROR!
-java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.returnBoolWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:88)
 
 [ERROR] returnObjectWorksProperly  Time elapsed: 0.001 s  <<< ERROR!
-java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.returnObjectWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:72)
 
 [ERROR] returnListWithComponentTypeWorksProperly  Time elapsed: 0 s  <<< ERROR!
-java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.returnListWithComponentTypeWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:101)
 
 [ERROR] returnListWorksProperly  Time elapsed: 0 s  <<< ERROR!
-java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.returnListWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:94)
 
 [ERROR] objectTypeArgWorksProperly  Time elapsed: 0.001 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function foo(x : object) { print(x) }foo(1)
-                                          ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : object) { print(x) }foo(1)
-                                              ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : object) { print(x) }foo(1)
-                                               ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : object) { print(x) }foo(1)
-                                                ^
-
-Error: Unexpected Token
-
-
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.objectTypeArgWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:26)
 
 [ERROR] voidFunctionWorksProperly  Time elapsed: 0 s  <<< ERROR!
-java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.voidFunctionWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:12)
 
-[ERROR] listTypeArgWorksProperly  Time elapsed: 0.001 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function foo(x : list) { print(x) }foo([1, 2, 3])
-                                        ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list) { print(x) }foo([1, 2, 3])
-                                            ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list) { print(x) }foo([1, 2, 3])
-                                             ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list) { print(x) }foo([1, 2, 3])
-                                              ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list) { print(x) }foo([1, 2, 3])
-                                               ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list) { print(x) }foo([1, 2, 3])
-                                                 ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list) { print(x) }foo([1, 2, 3])
-                                                  ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list) { print(x) }foo([1, 2, 3])
-                                                    ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list) { print(x) }foo([1, 2, 3])
-                                                     ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : list) { print(x) }foo([1, 2, 3])
-                                                      ^
-
-Error: Unexpected Token
-
-
+[ERROR] listTypeArgWorksProperly  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.listTypeArgWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:50)
 
 [ERROR] intTypeArgWorksProperly  Time elapsed: 0 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function foo(x : int) { print(x) }foo(1)
-                                       ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : int) { print(x) }foo(1)
-                                           ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : int) { print(x) }foo(1)
-                                            ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : int) { print(x) }foo(1)
-                                             ^
-
-Error: Unexpected Token
-
-
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.intTypeArgWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:32)
 
 [ERROR] booleanTypeArgWorksProperly  Time elapsed: 0 s  <<< ERROR!
-edu.montana.csci.csci468.parser.ParseErrorException: 
-Parse Errors Occurred:
-
-Line 1:function foo(x : bool) { print(x) }foo(true)
-                                        ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : bool) { print(x) }foo(true)
-                                            ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : bool) { print(x) }foo(true)
-                                             ^
-
-Error: Unexpected Token
-
-Line 1:function foo(x : bool) { print(x) }foo(true)
-                                                 ^
-
-Error: Unexpected Token
-
-
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.booleanTypeArgWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:38)
 
-[ERROR] returnIntWorksProperly  Time elapsed: 0.001 s  <<< ERROR!
-java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenizer.Token.getLine()" because "this.location" is null
+[ERROR] returnIntWorksProperly  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException: Cannot assign field "parent" because "element" is null
 	at edu.montana.csci.csci468.eval.CatscriptFunctionArgsAndReturnEvalTest.returnIntWorksProperly(CatscriptFunctionArgsAndReturnEvalTest.java:82)
 
 [INFO] 
 [INFO] Results:
 [INFO] 
 [ERROR] Failures: 
-[ERROR]   CatscriptParserSymbolCheckingTest.functionFunctionConflict:34 expected: <This name is already used in this program> but was: <Unexpected Token>
-[ERROR]   CatscriptParserSymbolCheckingTest.functionVarConflict:28 expected: <This name is already used in this program> but was: <Unexpected Token>
 [ERROR]   CatscriptParserSymbolCheckingTest.paramsConflictWithGlobalVars:46 expected: <This name is already used in this program> but was: <Unexpected Token>
-[ERROR]   CatscriptParserSymbolCheckingTest.varFunctionConflict:22 expected: <This name is already used in this program> but was: <Unexpected Token>
-[ERROR]   CatscriptParserTypeCheckingTest.assignmentTypeError:55 expected: <Incompatible types> but was: <Unexpected Token>
+[ERROR]   CatscriptParserTypeCheckingTest.assignmentTypeError:55 expected: <Incompatible types> but was: <This symbol is not defined>
 [ERROR]   CatscriptParserTypeCheckingTest.typeInferenceWorksForVars:45 expected: <int> but was: <null>
 [ERROR] Errors: 
 [ERROR]   CatscriptBasicExpressionEvalTest.additiveStringExpressionEvaluatesProperly:43->CatscriptTestBase.evaluateExpression:96 » UnsupportedOperation
@@ -679,52 +296,53 @@ java.lang.NullPointerException: Cannot invoke "edu.montana.csci.csci468.tokenize
 [ERROR]   CatscriptBasicExpressionEvalTest.factorExpressionEvaluatesProperly:29->CatscriptTestBase.evaluateExpression:96 » UnsupportedOperation
 [ERROR]   CatscriptBasicExpressionEvalTest.literalExpressionsEvaluatesProperly:15->CatscriptTestBase.evaluateExpression:96 » UnsupportedOperation
 [ERROR]   CatscriptBasicExpressionEvalTest.unaryExpressionEvaluatesProperly:24->CatscriptTestBase.evaluateExpression:96 » UnsupportedOperation
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.booleanTypeArgWorksProperly:38->CatscriptTestBase.executeProgram:102 » ParseError
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.intTypeArgWorksProperly:32->CatscriptTestBase.executeProgram:102 » ParseError
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.listTypeArgWorksProperly:50->CatscriptTestBase.executeProgram:102 » ParseError
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.listTypeWithComponentTypeArgWorksProperly:56->CatscriptTestBase.executeProgram:102 » ParseError
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.mutliArgumentFunctionsWork:62->CatscriptTestBase.executeProgram:102 » ParseError
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.noTypeArgWorksProperly:20->CatscriptTestBase.executeProgram:102 » ParseError
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.objectTypeArgWorksProperly:26->CatscriptTestBase.executeProgram:102 » ParseError
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.returnBoolWorksProperly:88->CatscriptTestBase.executeProgram:102 » NullPointer
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.returnIntWorksProperly:82->CatscriptTestBase.executeProgram:102 » NullPointer
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.returnListWithComponentTypeWorksProperly:101->CatscriptTestBase.executeProgram:102 » NullPointer
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.returnListWorksProperly:94->CatscriptTestBase.executeProgram:102 » NullPointer
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.returnObjectWorksProperly:72->CatscriptTestBase.executeProgram:102 » NullPointer
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.stringTypeArgWorksProperly:44->CatscriptTestBase.executeProgram:102 » ParseError
-[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.voidFunctionWorksProperly:12->CatscriptTestBase.executeProgram:102 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.booleanTypeArgWorksProperly:38->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.intTypeArgWorksProperly:32->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.listTypeArgWorksProperly:50->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.listTypeWithComponentTypeArgWorksProperly:56->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.mutliArgumentFunctionsWork:62->CatscriptTestBase.executeProgram:102 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.noTypeArgWorksProperly:20->CatscriptTestBase.executeProgram:102 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.objectTypeArgWorksProperly:26->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.returnBoolWorksProperly:88->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.returnIntWorksProperly:82->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.returnListWithComponentTypeWorksProperly:101->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.returnListWorksProperly:94->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.returnObjectWorksProperly:72->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.stringTypeArgWorksProperly:44->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptFunctionArgsAndReturnEvalTest.voidFunctionWorksProperly:12->CatscriptTestBase.executeProgram:101 » NullPointer
 [ERROR]   CatscriptStatementExecutionTest.forStatementWorksProperly:61->CatscriptTestBase.executeProgram:103 » UnsupportedOperation
-[ERROR]   CatscriptStatementExecutionTest.functionDeclarationWorksProperly:66->CatscriptTestBase.executeProgram:102 » ParseError
+[ERROR]   CatscriptStatementExecutionTest.functionDeclarationWorksProperly:66->CatscriptTestBase.executeProgram:102 » NullPointer
 [ERROR]   CatscriptStatementExecutionTest.ifStatementWorksProperly:24->CatscriptTestBase.executeProgram:103 » UnsupportedOperation
 [ERROR]   CatscriptStatementExecutionTest.localVarStatementsWorkProperly:43->CatscriptTestBase.executeProgram:102 » NullPointer
 [ERROR]   CatscriptStatementExecutionTest.printStatementWorksProperly:18->CatscriptTestBase.executeProgram:103 » UnsupportedOperation
-[ERROR]   CatscriptStatementExecutionTest.recursiveFunctionWorksProperly:75->CatscriptTestBase.executeProgram:102 » ParseError
-[ERROR]   CatscriptStatementExecutionTest.returnStatementWorks:88->CatscriptTestBase.executeProgram:102 » NullPointer
-[ERROR]   CatscriptStatementExecutionTest.varInsideFunctionWorksProperly:51->CatscriptTestBase.executeProgram:101 » IndexOutOfBounds
+[ERROR]   CatscriptStatementExecutionTest.recursiveFunctionWorksProperly:75->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptStatementExecutionTest.returnStatementWorks:88->CatscriptTestBase.executeProgram:101 » NullPointer
+[ERROR]   CatscriptStatementExecutionTest.varInsideFunctionWorksProperly:51->CatscriptTestBase.executeProgram:101 » NullPointer
 [ERROR]   CatscriptStatementExecutionTest.varStatementWorksProperly:32->CatscriptTestBase.executeProgram:102 » NullPointer
 [ERROR]   CatscriptParserErrorsTest.basicSymbolErrorWorks:15->CatscriptTestBase.getErrors:130 » NullPointer
-[ERROR]   CatscriptParserStatementsTest.assigmentStatement:128 ClassCast class edu.monta...
-[ERROR]   CatscriptParserStatementsTest.functionCallStatement:136 ClassCast class edu.mo...
-[ERROR]   CatscriptParserStatementsTest.functionDefStatement:144->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:56 » ParseError
-[ERROR]   CatscriptParserStatementsTest.functionDefWithParamTypesStatement:166->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:56 » ParseError
+[ERROR]   CatscriptParserStatementsTest.functionDefStatement:144->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:54 » NullPointer
+[ERROR]   CatscriptParserStatementsTest.functionDefWithParamTypesStatement:166->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:54 » NullPointer
 [ERROR]   CatscriptParserStatementsTest.functionDefWithParamsStatement:152->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:56 » ParseError
-[ERROR]   CatscriptParserStatementsTest.returnStatementExprInFunction:189->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:56 » ParseError
-[ERROR]   CatscriptParserStatementsTest.returnStatementNoExprInFunction:180->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:56 » ParseError
+[ERROR]   CatscriptParserStatementsTest.returnStatementExprInFunction:189->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:54 » NullPointer
+[ERROR]   CatscriptParserStatementsTest.returnStatementNoExprInFunction:180->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:54 » NullPointer
 [ERROR]   CatscriptParserSymbolCheckingTest.duplicateVarsErrors:16->CatscriptTestBase.getParseError:86 » IllegalState
 [ERROR]   CatscriptParserSymbolCheckingTest.forVarConflict:40->CatscriptTestBase.getParseError:86 » IllegalState
+[ERROR]   CatscriptParserSymbolCheckingTest.functionFunctionConflict:34->CatscriptTestBase.getParseError:83 » NullPointer
+[ERROR]   CatscriptParserSymbolCheckingTest.functionVarConflict:28->CatscriptTestBase.getParseError:83 » NullPointer
 [ERROR]   CatscriptParserSymbolCheckingTest.ifStatementBranchesDoNotConflic:59->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:56 » ParseError
 [ERROR]   CatscriptParserSymbolCheckingTest.paramsDoNotConflictWithEachOther:52->CatscriptTestBase.parseStatement:41->CatscriptTestBase.parseStatement:45->CatscriptTestBase.parseStatement:56 » ParseError
-[ERROR]   CatscriptParserTypeCheckingTest.functionCallsWorkProperly:38->CatscriptTestBase.parseStatement:49->CatscriptTestBase.parseStatement:56 » NullPointer
+[ERROR]   CatscriptParserSymbolCheckingTest.varFunctionConflict:22->CatscriptTestBase.getParseError:83 » NullPointer
+[ERROR]   CatscriptParserTypeCheckingTest.functionCallsWorkProperly:38->CatscriptTestBase.parseStatement:49->CatscriptTestBase.parseStatement:54 » NullPointer
 [ERROR]   CatscriptParserTypeCheckingTest.identifiersWorkProperly:32->CatscriptTestBase.parseStatement:49->CatscriptTestBase.parseStatement:56 » NullPointer
 [ERROR]   CatscriptParserTypeCheckingTest.varTypeError:50->CatscriptTestBase.getParseError:86 » IllegalState
 [INFO] 
-[ERROR] Tests run: 116, Failures: 6, Errors: 44, Skipped: 0
+[ERROR] Tests run: 116, Failures: 3, Errors: 45, Skipped: 0
 [INFO] 
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  1.928 s
-[INFO] Finished at: 2023-03-19T20:15:17-06:00
+[INFO] Total time:  1.864 s
+[INFO] Finished at: 2023-03-20T14:27:19-06:00
 [INFO] ------------------------------------------------------------------------
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.22.1:test (default-test) on project csci-468-spring2022: There are test failures.
 [ERROR] 
