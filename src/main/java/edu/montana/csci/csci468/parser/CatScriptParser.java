@@ -121,6 +121,10 @@ public class CatScriptParser {
         if (varStmt != null) {
             return varStmt;
         }
+        Statement assignmentOrFunctionCallStmt = parseAssignmentOrFunctionCallStatement();
+        if (assignmentOrFunctionCallStmt != null) {
+            return assignmentOrFunctionCallStmt;
+        }
         Statement returnStmt = parseReturnStatement();
         if (printStmt != null) {
             return printStmt;
@@ -199,25 +203,52 @@ public class CatScriptParser {
         if (tokens.match(IDENTIFIER)){
             Token id = tokens.consumeToken();
             if (tokens.match(LEFT_PAREN)){
-                parseFunctionCallStatement(id);
+                return parseFunctionCallStatement(id);
             } else {
                 return parseAssignmentStatement(id);
             }
+        } else {
+            return null;
         }
-        return null;
     }
 
+    // assignment_statement = IDENTIFIER, '=', expression;
     private Statement parseAssignmentStatement(Token id) {
-        return null;
+        AssignmentStatement assignStmt = new AssignmentStatement();
+        assignStmt.setStart(id);
+        assignStmt.setVariableName(id.getStringValue());
+        require(EQUAL, assignStmt);
+        assignStmt.setExpression(parseExpression());
+        assignStmt.setEnd(tokens.lastToken());
+        return assignStmt;
     }
 
     private Statement parseFunctionCallStatement(Token id) {
-        //Expression e = parseFunctionCallExpression(id);
-        //return new FunctionCallStatement(e);
-        return null;
+        FunctionCallExpression e = parseFunctionCallExpression(id);
+        return new FunctionCallStatement(e);
     }
 
-    private Expression parseFunctionCallExpression(Token id) {
+    // function_declaration = 'function', IDENTIFIER, '(', parameter_list, ')' +
+    //                       [ ':' + type_expression ], '{',  { function_body_statement },  '}';
+    private FunctionCallExpression parseFunctionCallExpression(Token id) {
+        tokens.matchAndConsume(LEFT_PAREN);
+        LinkedList<Expression> expressions = new LinkedList<Expression>();
+        // we have some number of expressions, which implies a while loop
+        do {
+            Expression expression = parseExpression();
+            expressions.push(expression);
+            if (tokens.match(RIGHT_PAREN)) {
+                Token end = tokens.consumeToken();
+                FunctionCallExpression funcCallExpression = new FunctionCallExpression(id.getStringValue(), expressions);
+                return funcCallExpression;
+            }
+        } while (tokens.matchAndConsume(COMMA));
+
+        if (tokens.match(EOF)) {
+            FunctionCallExpression functionCallExpression = new FunctionCallExpression(id.getStringValue(), expressions);
+            functionCallExpression.addError(ErrorType.UNTERMINATED_ARG_LIST);
+            return functionCallExpression;
+        }
         return null;
     }
 
