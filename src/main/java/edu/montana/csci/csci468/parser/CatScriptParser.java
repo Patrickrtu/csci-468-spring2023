@@ -117,12 +117,49 @@ public class CatScriptParser {
         if (ifStmt != null) {
             return ifStmt;
         }
+        Statement varStmt = parseVariableStatement();
+        if (varStmt != null) {
+            return varStmt;
+        }
         Statement returnStmt = parseReturnStatement();
         if (printStmt != null) {
             return printStmt;
         }
         Statement assignmentOrFuncCall = parseAssignmentOrFunctionCallStatement();
         return new SyntaxErrorStatement(tokens.consumeToken());
+    }
+
+//    variable_statement = 'var', IDENTIFIER,
+//            [':', type_expression, ] '=', expression;
+    private Statement parseVariableStatement() {
+
+        if (tokens.match(VAR)) {
+            VariableStatement varStatement = new VariableStatement();
+            varStatement.setStart(tokens.consumeToken());
+            varStatement.setVariableName(require(IDENTIFIER, varStatement).getStringValue());
+
+            if (tokens.match(COLON)) {
+                tokens.consumeToken();
+                Token typeToken = require(IDENTIFIER, varStatement);
+                if (typeToken.getStringValue().equals("list")) {
+                    require(LESS, varStatement);
+                    Token listTypeToken = require(IDENTIFIER, varStatement);
+                    CatscriptType catscriptType = new CatscriptType(listTypeToken.getStringValue(), listTypeToken.getClass());
+                    CatscriptType.ListType listType = new CatscriptType.ListType(catscriptType);
+                    varStatement.setExplicitType(listType);
+                    require(GREATER, varStatement);
+                } else {
+                    CatscriptType catscriptType = new CatscriptType(typeToken.getStringValue(), typeToken.getClass());
+                    varStatement.setExplicitType(catscriptType);
+                }
+            }
+            require(EQUAL, varStatement);
+            varStatement.setExpression(parseExpression());
+            varStatement.setEnd(tokens.lastToken());
+            return varStatement;
+        } else {
+            return null;
+        }
     }
 
     private Statement parseIfStatement() {
