@@ -65,43 +65,91 @@ public class CatScriptParser {
         return parseStatement();
     }
 
+    // function_declaration = 'function', IDENTIFIER, '(', parameter_list, ')' +
+    //                       [ ':' + type_expression ], '{',  { function_body_statement },  '}';
     private Statement parseFunctionDefinitionStatement() {
         if (tokens.match(FUNCTION)){
             FunctionDefinitionStatement def = new FunctionDefinitionStatement();
             def.setStart(tokens.consumeToken());
             // require an identifier (name of the function)
+            Token name = require(IDENTIFIER, def);
+            def.setName(name.getStringValue());
             // require a left paren
-
-            // require (
-
+            require(LEFT_PAREN, def);
+            if (tokens.match(RIGHT_PAREN)) {
+                require(RIGHT_PAREN, def);
+//                CatscriptType catType = new CatscriptType(null, null);
+//                TypeLiteral type = new TypeLiteral();
+//                type.setType(catType);
+//                def.addParameter(null, type);
+            } else {
             // require some num of args (comma separated)
-            /// do while(tokens.matchAndConsume(","))
+                do {
+                    String argumentName = tokens.getCurrentToken().getStringValue();
+                    Expression expression = parseExpression();
+                    TypeLiteral type = new TypeLiteral();
+                    type.setType(CatscriptType.OBJECT);
+                    // optionally match :
+                    if (tokens.match(COLON)) {
+                        tokens.consumeToken();
+                        Expression argType = parseTypeExpression();
+                        //assert argType != null;
+                        type.setType(argType.getType());
+                    }
+                    def.addParameter(argumentName, type);
+                } while (tokens.matchAndConsume(COMMA));
+                require(RIGHT_PAREN, def);
+            }
 
-            // require )
-
-            //def.addParameter();
-
+            TypeLiteral type = new TypeLiteral();
+            type.setType(CatscriptType.VOID);
+            def.setType(type);
             // optionally match :
             if (tokens.match(COLON)) {
                 Expression expression = parseTypeExpression();
             }
             // require {
+            require(LEFT_BRACE, def);
             // body of a function declaration
             this.currentFunctionDefinition = def;
-            while(!tokens.match(RIGHT_BRACE)){
-                parseStatement();
+            LinkedList<Statement> statements = new LinkedList<Statement>();
+            while(!tokens.match(RIGHT_BRACE) && tokens.hasMoreTokens()){
+                statements.add(parseStatement());
             }
             // require }
+            require(RIGHT_BRACE, def);
+            def.setBody(statements);
             this.currentFunctionDefinition = null;
+            return def;
         }
         return null;
     }
 
+    // type_expression = 'int' | 'string' | 'bool' | 'object' | 'list' [, '<' , type_expression, '>']
     private Expression parseTypeExpression() {
+        Token type = tokens.consumeToken();
         TypeLiteral typeLiteral = new TypeLiteral();
         // recursive call here to deal with lists
-        //typeLiteral.setType();
-        return typeLiteral;
+        if (type.getStringValue().equals("int")) {
+            typeLiteral.setType(CatscriptType.INT);
+            return typeLiteral;
+        } else if (type.getStringValue().equals("string")) {
+            typeLiteral.setType(CatscriptType.STRING);
+            return typeLiteral;
+        } else if (type.getStringValue().equals("bool")) {
+            typeLiteral.setType(CatscriptType.BOOLEAN);
+            return typeLiteral;
+        } else if (type.getStringValue().equals("object")) {
+            typeLiteral.setType(CatscriptType.OBJECT);
+            return typeLiteral;
+        }
+        // TODO: support list
+        //else if (type.getStringValue().equals("list")) {
+           // typeLiteral.setType(CatscriptType.ListType);
+        //}
+        else {
+            return null;
+        }
     }
 
     private Statement parseStatement() {
@@ -126,8 +174,8 @@ public class CatScriptParser {
             return assignmentOrFunctionCallStmt;
         }
         Statement returnStmt = parseReturnStatement();
-        if (printStmt != null) {
-            return printStmt;
+        if (returnStmt != null) {
+            return returnStmt;
         }
         Statement assignmentOrFuncCall = parseAssignmentOrFunctionCallStatement();
         return new SyntaxErrorStatement(tokens.consumeToken());
@@ -280,9 +328,24 @@ public class CatScriptParser {
         }
     }
 
+    // return_statement = 'return' [, expression];
     private Statement parseReturnStatement() {
-        if (this.currentFunctionDefinition != null) {
-            // do the real return statement parsing...
+        if (tokens.match(RETURN)) {
+            ReturnStatement returnStatement = new ReturnStatement();
+            returnStatement.setStart(tokens.consumeToken());
+            returnStatement.setFunctionDefinition(currentFunctionDefinition);
+
+            if (!tokens.match(RIGHT_BRACE)) {
+                if (this.currentFunctionDefinition != null) {
+                    // do the real return statement parsing...
+                    Expression expression = parseExpression();
+                    returnStatement.setExpression(expression);
+                    return returnStatement;
+                }
+            }
+            if (this.currentFunctionDefinition != null) {
+                return returnStatement;
+            }
         }
         return null;
     }
