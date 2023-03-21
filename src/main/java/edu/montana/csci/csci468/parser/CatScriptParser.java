@@ -469,6 +469,7 @@ public class CatScriptParser {
                 return parseFunctionCall(identifier);
             } else {
                 IdentifierExpression identifierExpression = new IdentifierExpression(identifier.getStringValue());
+                identifierExpression.setToken(identifier);
                 return identifierExpression;
             }
         } else if (tokens.match(TRUE)){
