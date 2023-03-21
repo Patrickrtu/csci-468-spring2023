@@ -207,15 +207,16 @@ public class CatScriptParser {
             varStatement.setEnd(tokens.getCurrentToken());
             Expression expression = parseExpression();
             varStatement.setExpression(expression);
-            if (!expression.getType().equals(null)) {
-                varStatement.setType(CatscriptType.OBJECT);
-            }
+            varStatement.setType(CatscriptType.OBJECT);
             return varStatement;
         } else {
             return null;
         }
     }
 
+    // if_statement = 'if', '(', expression, ')', '{',
+    //                    { statement },
+    //               '}' [ 'else', ( if_statement | '{', { statement }, '}' ) ];
     private Statement parseIfStatement() {
         if (tokens.match(IF)){
             IfStatement ifStatement = new IfStatement();
@@ -231,8 +232,8 @@ public class CatScriptParser {
             }
             ifStatement.setTrueStatements(statements);
             Token end = require(RIGHT_BRACE, ifStatement);
-            if (tokens.match(ELSE)) {
-                parseIfStatement();
+            if (tokens.matchAndConsume(ELSE)) {
+                //parseIfStatement();
                 require(LEFT_BRACE, ifStatement);
                 LinkedList<Statement> elseStatements = new LinkedList<Statement>();
                 while(!tokens.match(RIGHT_BRACE) && tokens.hasMoreTokens()){
