@@ -208,7 +208,7 @@ public class CatScriptParser {
             Expression expression = parseExpression();
             varStatement.setExpression(expression);
             if (!expression.getType().equals(null)) {
-                varStatement.setType(expression.getType());
+                varStatement.setType(CatscriptType.OBJECT);
             }
             return varStatement;
         } else {
