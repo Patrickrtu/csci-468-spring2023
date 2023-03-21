@@ -204,8 +204,12 @@ public class CatScriptParser {
                 }
             }
             require(EQUAL, varStatement);
-            varStatement.setExpression(parseExpression());
-            varStatement.setEnd(tokens.lastToken());
+            varStatement.setEnd(tokens.getCurrentToken());
+            Expression expression = parseExpression();
+            varStatement.setExpression(expression);
+            if (!expression.getType().equals(null)) {
+                varStatement.setType(expression.getType());
+            }
             return varStatement;
         } else {
             return null;

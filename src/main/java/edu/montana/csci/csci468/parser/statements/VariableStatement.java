@@ -38,6 +38,10 @@ public class VariableStatement extends Statement {
         return explicitType;
     }
 
+    public void setType(CatscriptType type) {
+        this.type = type;
+    }
+
     public boolean isGlobal() {
         return getParent() instanceof CatScriptProgram;
     }
