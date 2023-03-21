@@ -76,8 +76,7 @@ public class CatScriptParser {
             def.setName(name.getStringValue());
             // require a left paren
             require(LEFT_PAREN, def);
-            if (tokens.match(RIGHT_PAREN)) {
-                require(RIGHT_PAREN, def);
+            if (tokens.matchAndConsume(RIGHT_PAREN)) {
 //                CatscriptType catType = new CatscriptType(null, null);
 //                TypeLiteral type = new TypeLiteral();
 //                type.setType(catType);
@@ -90,8 +89,7 @@ public class CatScriptParser {
                     TypeLiteral type = new TypeLiteral();
                     type.setType(CatscriptType.OBJECT);
                     // optionally match :
-                    if (tokens.match(COLON)) {
-                        tokens.consumeToken();
+                    if (tokens.matchAndConsume(COLON)) {
                         Expression argType = parseTypeExpression();
                         //assert argType != null;
                         type.setType(argType.getType());
@@ -105,7 +103,7 @@ public class CatScriptParser {
             type.setType(CatscriptType.VOID);
             def.setType(type);
             // optionally match :
-            if (tokens.match(COLON)) {
+            if (tokens.matchAndConsume(COLON)) {
                 Expression expression = parseTypeExpression();
             }
             // require {
