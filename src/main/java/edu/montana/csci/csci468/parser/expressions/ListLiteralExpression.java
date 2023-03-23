@@ -3,6 +3,7 @@ package edu.montana.csci.csci468.parser.expressions;
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
+import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.SymbolTable;
 
 import java.util.LinkedList;
@@ -29,8 +30,12 @@ public class ListLiteralExpression extends Expression {
             value.validate(symbolTable);
         }
         if (values.size() > 0) {
-            // TODO - generalize this looking at all objects in list
             type = CatscriptType.getListType(values.get(0).getType());
+            for (Expression value : values) {
+                if (!CatscriptType.getListType(value.getType()).equals(type)) {
+                    addError(ErrorType.INCOMPATIBLE_TYPES);
+                }
+            }
         } else {
             type = CatscriptType.getListType(CatscriptType.OBJECT);
         }

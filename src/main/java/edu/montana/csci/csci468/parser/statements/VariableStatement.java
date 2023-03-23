@@ -51,6 +51,8 @@ public class VariableStatement extends Statement {
         expression.validate(symbolTable);
         if (symbolTable.hasSymbol(variableName)) {
             addError(ErrorType.DUPLICATE_NAME);
+        } else if (this.getExplicitType() != null && !this.getExplicitType().equals(CatscriptType.OBJECT) && !this.getExplicitType().equals(this.getType())){
+            addError(ErrorType.INCOMPATIBLE_TYPES);
         } else {
             // TODO if there is an explicit type, ensure it is correct
             //      if not, infer the type from the right hand side expression

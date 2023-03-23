@@ -29,7 +29,6 @@ public class IdentifierExpression extends Expression {
     public void validate(SymbolTable symbolTable) {
         CatscriptType type = symbolTable.getSymbolType(getName());
         if (type == null) {
-            //     public void addError(ErrorType errorMessage, Token token, Object... args) {
             addError(ErrorType.UNKNOWN_NAME);
         } else {
             this.type = type;

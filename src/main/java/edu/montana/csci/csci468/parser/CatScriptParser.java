@@ -105,6 +105,8 @@ public class CatScriptParser {
             // optionally match :
             if (tokens.matchAndConsume(COLON)) {
                 Expression expression = parseTypeExpression();
+                type.setType(expression.getType());
+                def.setType(type);
             }
             // require {
             require(LEFT_BRACE, def);
@@ -127,7 +129,6 @@ public class CatScriptParser {
     private Expression parseTypeExpression() {
         Token type = tokens.consumeToken();
         TypeLiteral typeLiteral = new TypeLiteral();
-        // recursive call here to deal with lists
         if (type.getStringValue().equals("int")) {
             typeLiteral.setType(CatscriptType.INT);
             return typeLiteral;
@@ -141,10 +142,15 @@ public class CatScriptParser {
             typeLiteral.setType(CatscriptType.OBJECT);
             return typeLiteral;
         }
+        // recursive call here to deal with lists
         // TODO: support list
-        //else if (type.getStringValue().equals("list")) {
-           // typeLiteral.setType(CatscriptType.ListType);
-        //}
+        else if (type.getStringValue().equals("list")) {
+            require(LESS, typeLiteral);
+            Expression typeExpression = parseTypeExpression();
+            typeLiteral.setType(CatscriptType.getListType(typeExpression.getType()));
+            require(GREATER, typeLiteral);
+            return typeLiteral;
+        }
         else {
             return null;
         }
@@ -188,26 +194,33 @@ public class CatScriptParser {
             varStatement.setStart(tokens.consumeToken());
             varStatement.setVariableName(require(IDENTIFIER, varStatement).getStringValue());
 
-            if (tokens.match(COLON)) {
-                tokens.consumeToken();
-                Token typeToken = require(IDENTIFIER, varStatement);
-                if (typeToken.getStringValue().equals("list")) {
-                    require(LESS, varStatement);
-                    Token listTypeToken = require(IDENTIFIER, varStatement);
-                    CatscriptType catscriptType = new CatscriptType(listTypeToken.getStringValue(), listTypeToken.getClass());
-                    CatscriptType.ListType listType = new CatscriptType.ListType(catscriptType);
-                    varStatement.setExplicitType(listType);
-                    require(GREATER, varStatement);
-                } else {
-                    CatscriptType catscriptType = new CatscriptType(typeToken.getStringValue(), typeToken.getClass());
-                    varStatement.setExplicitType(catscriptType);
-                }
+            if (tokens.matchAndConsume(COLON)) {
+                //Token typeToken = require(IDENTIFIER, varStatement);
+//                if (typeToken.getStringValue().equals("list")) {
+//                    require(LESS, varStatement);
+//                    // parseTypeExpression
+//                    Expression typeExpression = parseTypeExpression();
+//                    Token listTypeToken = require(IDENTIFIER, varStatement);
+//                    CatscriptType catscriptType = new CatscriptType(listTypeToken.getStringValue(), listTypeToken.getClass());
+//                    CatscriptType.ListType listType = new CatscriptType.ListType(catscriptType);
+//                    varStatement.setExplicitType(listType);
+//                    require(GREATER, varStatement);
+//                } else {
+//                    CatscriptType catscriptType = new CatscriptType(typeToken.getStringValue(), typeToken.getClass());
+//                    varStatement.setExplicitType(catscriptType);
+//                }
+                Expression typeExpression = parseTypeExpression();
+                varStatement.setExplicitType(typeExpression.getType());
             }
             require(EQUAL, varStatement);
             varStatement.setEnd(tokens.getCurrentToken());
             Expression expression = parseExpression();
             varStatement.setExpression(expression);
-            varStatement.setType(CatscriptType.OBJECT);
+            varStatement.setType(expression.getType());
+            // a hack...
+            if (varStatement.getType() == null){
+                varStatement.setType(varStatement.getExplicitType());
+            }
             return varStatement;
         } else {
             return null;
