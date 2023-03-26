@@ -56,7 +56,7 @@ public class EqualityExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        // TODO: think this through...
+        // TODO: handle String, list, Identifier...
         if (isEqual()) {
             // only return true when both sides have the same type
             if (getLeftHandSide().getType().equals(getRightHandSide().getType())) {

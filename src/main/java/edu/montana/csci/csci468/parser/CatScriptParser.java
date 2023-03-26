@@ -143,7 +143,6 @@ public class CatScriptParser {
             return typeLiteral;
         }
         // recursive call here to deal with lists
-        // TODO: support list
         else if (type.getStringValue().equals("list")) {
             require(LESS, typeLiteral);
             Expression typeExpression = parseTypeExpression();

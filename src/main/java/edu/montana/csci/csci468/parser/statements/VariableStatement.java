@@ -7,6 +7,8 @@ import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
+import edu.montana.csci.csci468.parser.expressions.IdentifierExpression;
+import edu.montana.csci.csci468.tokenizer.TokenType;
 
 public class VariableStatement extends Statement {
     private Expression expression;
@@ -51,13 +53,34 @@ public class VariableStatement extends Statement {
         expression.validate(symbolTable);
         if (symbolTable.hasSymbol(variableName)) {
             addError(ErrorType.DUPLICATE_NAME);
-        } else if (this.getExplicitType() != null && !this.getExplicitType().equals(CatscriptType.OBJECT) && !this.getExplicitType().equals(this.getType())){
+        } else if (explicitType != null && !explicitType.isAssignableFrom(expression.getType())){
             addError(ErrorType.INCOMPATIBLE_TYPES);
         } else {
             // TODO if there is an explicit type, ensure it is correct
             //      if not, infer the type from the right hand side expression
+            if (type == null) {
+                setType(expression.getType());
+            }
             symbolTable.registerSymbol(variableName, type);
         }
+//        if (symbolTable.hasSymbol(variableName)) {
+//            addError(ErrorType.DUPLICATE_NAME);
+//        } else {
+//            type = null;
+//            if (explicitType != null) {
+//                type = explicitType;
+//                // var x : list = 1
+//                if (!explicitType.isAssignableFrom(expression.getType())) {
+//                    addError(ErrorType.INCOMPATIBLE_TYPES);
+//                } else {
+//                    type = expression.getType();
+//                }
+//
+//                // TODO if there is an explicit type, ensure it is correct
+//                //      if not, infer the type from the right hand side expression
+//                symbolTable.registerSymbol(variableName, type);
+//            }
+//        }
     }
 
     public CatscriptType getType() {
@@ -69,7 +92,27 @@ public class VariableStatement extends Statement {
     //==============================================================
     @Override
     public void execute(CatscriptRuntime runtime) {
-        super.execute(runtime);
+//        super.execute(runtime);
+
+//        Boolean conditionalResult = (Boolean) expression.evaluate(runtime);
+//        runtime.pushScope();
+//        if (Boolean.TRUE.equals(conditionalResult)) {
+//            for (Statement trueStatement : trueStatements) {
+//                trueStatement.execute(runtime);
+//            }
+//        } else {
+//            for (Statement elseStatement : elseStatements) {
+//                elseStatement.execute(runtime);
+//            }
+//        }
+//        runtime.popScope();
+//    }
+        Object val = expression.evaluate(runtime);
+//        if (expression.getStart().getType().equals(TokenType.IDENTIFIER)) {
+//            runtime.setValue(getVariableName(), runtime.getValue(expression.toString()));
+//            return;
+//        }
+        runtime.setValue(getVariableName(), val);
     }
 
     @Override
