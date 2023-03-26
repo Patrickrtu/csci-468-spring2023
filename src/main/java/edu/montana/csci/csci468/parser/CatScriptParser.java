@@ -195,20 +195,6 @@ public class CatScriptParser {
             varStatement.setVariableName(require(IDENTIFIER, varStatement).getStringValue());
 
             if (tokens.matchAndConsume(COLON)) {
-                //Token typeToken = require(IDENTIFIER, varStatement);
-//                if (typeToken.getStringValue().equals("list")) {
-//                    require(LESS, varStatement);
-//                    // parseTypeExpression
-//                    Expression typeExpression = parseTypeExpression();
-//                    Token listTypeToken = require(IDENTIFIER, varStatement);
-//                    CatscriptType catscriptType = new CatscriptType(listTypeToken.getStringValue(), listTypeToken.getClass());
-//                    CatscriptType.ListType listType = new CatscriptType.ListType(catscriptType);
-//                    varStatement.setExplicitType(listType);
-//                    require(GREATER, varStatement);
-//                } else {
-//                    CatscriptType catscriptType = new CatscriptType(typeToken.getStringValue(), typeToken.getClass());
-//                    varStatement.setExplicitType(catscriptType);
-//                }
                 Expression typeExpression = parseTypeExpression();
                 varStatement.setExplicitType(typeExpression.getType());
             }

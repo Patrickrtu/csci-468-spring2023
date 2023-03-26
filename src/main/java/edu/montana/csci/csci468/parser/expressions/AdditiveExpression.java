@@ -67,14 +67,53 @@ public class AdditiveExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
-        Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
-        //TODO handle string case
-        if (isAdd()) {
-            return lhsValue + rhsValue;
-        } else {
-            return lhsValue - rhsValue;
+//        Object evaluate = leftHandSide.evaluate(runtime);
+        if (leftHandSide.getType().equals(CatscriptType.STRING) && rightHandSide.getType().equals(CatscriptType.INT)) {
+            String lhsValue = (String) leftHandSide.evaluate(runtime);
+            Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
+            if (isAdd()) {
+                return lhsValue + rhsValue;
+            } else {
+                addError(ErrorType.UNEXPECTED_TOKEN);
+                return lhsValue + rhsValue;
+            }
         }
+        if (leftHandSide.getType().equals(CatscriptType.STRING) && rightHandSide.getType().equals(CatscriptType.STRING)) {
+            String lhsValue = (String) leftHandSide.evaluate(runtime);
+            String rhsValue = (String) rightHandSide.evaluate(runtime);
+            if (isAdd()) {
+                return lhsValue + rhsValue;
+            } else {
+                addError(ErrorType.UNEXPECTED_TOKEN);
+                return lhsValue + rhsValue;
+            }
+        }
+        if (leftHandSide.getType().equals(CatscriptType.INT) && rightHandSide.getType().equals(CatscriptType.STRING)) {
+            Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
+            String rhsValue = (String) rightHandSide.evaluate(runtime);
+            if (isAdd()) {
+                return lhsValue + rhsValue;
+            } else {
+                addError(ErrorType.UNEXPECTED_TOKEN);
+                return lhsValue + rhsValue;
+            }
+        }
+        if (leftHandSide.getType().equals(CatscriptType.INT) && rightHandSide.getType().equals(CatscriptType.INT)) {
+            Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
+            Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
+            if (isAdd()) {
+                return lhsValue + rhsValue;
+            } else {
+                return lhsValue - rhsValue;
+            }
+        }
+        if (leftHandSide.getType().equals(CatscriptType.NULL)){
+            return "null" + rightHandSide.evaluate(runtime);
+        }
+        if (rightHandSide.getType().equals(CatscriptType.NULL)){
+            return leftHandSide.evaluate(runtime) + "null";
+        }
+        return null;
     }
 
     @Override

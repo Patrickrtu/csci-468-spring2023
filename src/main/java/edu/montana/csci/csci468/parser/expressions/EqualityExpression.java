@@ -6,6 +6,7 @@ import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
+import org.apache.commons.lang.ObjectUtils;
 
 public class EqualityExpression extends Expression {
 
@@ -35,7 +36,9 @@ public class EqualityExpression extends Expression {
     public boolean isEqual() {
         return operator.getType().equals(TokenType.EQUAL_EQUAL);
     }
-
+    public boolean isNotEqual() {
+        return operator.getType().equals(TokenType.BANG_EQUAL);
+    }
     @Override
     public void validate(SymbolTable symbolTable) {
         leftHandSide.validate(symbolTable);
@@ -53,7 +56,56 @@ public class EqualityExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        return super.evaluate(runtime);
+        // TODO: think this through...
+        if (isEqual()) {
+            // only return true when both sides have the same type
+            if (getLeftHandSide().getType().equals(getRightHandSide().getType())) {
+                if (getLeftHandSide().getType().equals(CatscriptType.INT)) {
+                    Integer lhsVal = (Integer) getLeftHandSide().evaluate(runtime);
+                    Integer rhsVal = (Integer) getRightHandSide().evaluate(runtime);
+                    if (isEqual()) {
+                        return lhsVal == rhsVal;
+                    } else {
+                        return null;
+                    }
+                } else if (getLeftHandSide().getType().equals(CatscriptType.BOOLEAN)) {
+                    Boolean lhsVal = (Boolean) getLeftHandSide().evaluate(runtime);
+                    Boolean rhsVal = (Boolean) getRightHandSide().evaluate(runtime);
+                    return lhsVal == rhsVal;
+                } else if (getLeftHandSide().getType().equals(CatscriptType.NULL)) {
+                    return null == null;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else if (isNotEqual()) {
+            // only return false when both sides have the same type and evaluates differently
+            if (getLeftHandSide().getType().equals(getRightHandSide().getType())) {
+                if (getLeftHandSide().getType().equals(CatscriptType.INT)) {
+                    Integer lhsVal = (Integer) getLeftHandSide().evaluate(runtime);
+                    Integer rhsVal = (Integer) getRightHandSide().evaluate(runtime);
+                    if (isEqual()) {
+                        return lhsVal != rhsVal;
+                    } else {
+                        return null;
+                    }
+                } else if (getLeftHandSide().getType().equals(CatscriptType.BOOLEAN)) {
+                    Boolean lhsVal = (Boolean) getLeftHandSide().evaluate(runtime);
+                    Boolean rhsVal = (Boolean) getRightHandSide().evaluate(runtime);
+                    return lhsVal != rhsVal;
+                } else if (getLeftHandSide().getType().equals(CatscriptType.NULL)) {
+                    return null != null;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        } else {
+            return null;
+        }
     }
 
     @Override
