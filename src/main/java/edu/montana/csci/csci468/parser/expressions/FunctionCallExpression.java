@@ -19,10 +19,12 @@ public class FunctionCallExpression extends Expression {
 
     public FunctionCallExpression(String functionName, List<Expression> arguments) {
         this.arguments = new LinkedList<>();
-        for (Expression value : arguments) {
-            this.arguments.add(addChild(value));
-        }
         this.name = functionName;
+        if (!arguments.isEmpty()) {
+            for (Expression value : arguments) {
+                this.arguments.add(addChild(value));
+            }
+        }
     }
 
     public List<Expression> getArguments() {

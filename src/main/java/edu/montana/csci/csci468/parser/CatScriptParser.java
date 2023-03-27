@@ -144,6 +144,10 @@ public class CatScriptParser {
         }
         // recursive call here to deal with lists
         else if (type.getStringValue().equals("list")) {
+            if (tokens.match(RIGHT_PAREN) || tokens.match(LEFT_BRACE)) {
+                typeLiteral.setType(CatscriptType.getListType(CatscriptType.OBJECT));
+                return typeLiteral;
+            }
             require(LESS, typeLiteral);
             Expression typeExpression = parseTypeExpression();
             typeLiteral.setType(CatscriptType.getListType(typeExpression.getType()));
@@ -285,20 +289,20 @@ public class CatScriptParser {
         // we have some number of expressions, which implies a while loop
         do {
             Expression expression = parseExpression();
-            expressions.push(expression);
-            if (tokens.match(RIGHT_PAREN)) {
-                Token end = tokens.consumeToken();
-                FunctionCallExpression funcCallExpression = new FunctionCallExpression(id.getStringValue(), expressions);
-                return funcCallExpression;
+            if (expression != null) {
+                expressions.push(expression);
             }
         } while (tokens.matchAndConsume(COMMA));
 
-        if (tokens.match(EOF)) {
-            FunctionCallExpression functionCallExpression = new FunctionCallExpression(id.getStringValue(), expressions);
-            functionCallExpression.addError(ErrorType.UNTERMINATED_ARG_LIST);
-            return functionCallExpression;
+        if (tokens.match(RIGHT_PAREN)) {
+            tokens.consumeToken();
+            FunctionCallExpression funcCallExpression = new FunctionCallExpression(id.getStringValue(), expressions);
+            return funcCallExpression;
         }
-        return null;
+
+        FunctionCallExpression functionCallExpression = new FunctionCallExpression(id.getStringValue(), expressions);
+        functionCallExpression.addError(ErrorType.UNTERMINATED_ARG_LIST);
+        return functionCallExpression;
     }
 
     private Statement parseForStatement() {
