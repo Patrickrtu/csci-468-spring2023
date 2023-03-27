@@ -77,14 +77,12 @@ public class ComparisonExpression extends Expression {
             IntegerLiteralExpression lhsVal = (IntegerLiteralExpression) getLeftHandSide().evaluate(runtime);
             lhsValue = (Integer) lhsVal.evaluate(runtime);
         } catch (ClassCastException e) {
-            System.out.println("I got u");
         }
 
         try {
             IntegerLiteralExpression rhsVal = (IntegerLiteralExpression) getRightHandSide().evaluate(runtime);
             rhsValue = (Integer) rhsVal.evaluate(runtime);
         } catch (ClassCastException e) {
-            System.out.println("I got u");
         }
 
 
@@ -94,7 +92,6 @@ public class ComparisonExpression extends Expression {
                 AdditiveExpression lhsVal = (AdditiveExpression) getLeftHandSide().evaluate(runtime);
                 lhsValue = (Integer) lhsVal.evaluate(runtime);
             } catch (ClassCastException e) {
-                System.out.println("I got u");
             }
             if (lhsValue == null) {
                 lhsValue = (Integer) getLeftHandSide().evaluate(runtime);
@@ -106,7 +103,6 @@ public class ComparisonExpression extends Expression {
                 AdditiveExpression rhsVal = (AdditiveExpression) getRightHandSide().evaluate(runtime);
                 rhsValue = (Integer) rhsVal.evaluate(runtime);
             } catch (ClassCastException e) {
-                System.out.println("I got u");
             }
             if (rhsValue == null) {
                 rhsValue = (Integer) getRightHandSide().evaluate(runtime);

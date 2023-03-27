@@ -67,10 +67,38 @@ public class AdditiveExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        // TODO: figure out why this is returning AdditiveExpression
-//        if (getType().equals(CatscriptType.STRING)) {
+        // TODO: handle recursive behavior in lhs and rhs
+        AdditiveExpression lhsVal = null;
+        AdditiveExpression rhsVal = null;
+        Integer lhsIntVal = null;
+        Integer rhsIntVal = null;
+        try {
+            lhsVal = (AdditiveExpression) leftHandSide.evaluate(runtime);
+        } catch (ClassCastException e) {
+        }
+        if (lhsVal != null) {
+            lhsIntVal = (Integer)lhsVal.evaluate(runtime);
+        }
+
+        try {
+            rhsVal = (AdditiveExpression) rightHandSide.evaluate(runtime);
+        } catch (ClassCastException e) {
+        }
+        if (rhsVal != null) {
+            rhsIntVal = (Integer)rhsVal.evaluate(runtime);
+        }
+
+
         if (leftHandSide.getType().equals(CatscriptType.STRING) && rightHandSide.getType().equals(CatscriptType.INT)) {
             String lhsValue = (String) leftHandSide.evaluate(runtime);
+            if (rhsIntVal != null) {
+                if (isAdd()) {
+                    return lhsValue + rhsIntVal;
+                } else {
+                    addError(ErrorType.UNEXPECTED_TOKEN);
+                    return lhsValue + rhsIntVal;
+                }
+            }
             Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
             if (isAdd()) {
                 return lhsValue + rhsValue;
@@ -79,6 +107,7 @@ public class AdditiveExpression extends Expression {
                 return lhsValue + rhsValue;
             }
         }
+
         if (leftHandSide.getType().equals(CatscriptType.STRING) && rightHandSide.getType().equals(CatscriptType.STRING)) {
             String lhsValue = (String) leftHandSide.evaluate(runtime);
             String rhsValue = (String) rightHandSide.evaluate(runtime);
@@ -90,8 +119,17 @@ public class AdditiveExpression extends Expression {
             }
         }
         if (leftHandSide.getType().equals(CatscriptType.INT) && rightHandSide.getType().equals(CatscriptType.STRING)) {
-            Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
             String rhsValue = (String) rightHandSide.evaluate(runtime);
+
+            if (lhsIntVal != null) {
+                if (isAdd()) {
+                    return lhsIntVal + rhsValue;
+                } else {
+                    addError(ErrorType.UNEXPECTED_TOKEN);
+                    return lhsIntVal + rhsValue;
+                }
+            }
+            Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
             if (isAdd()) {
                 return lhsValue + rhsValue;
             } else {
@@ -99,15 +137,21 @@ public class AdditiveExpression extends Expression {
                 return lhsValue + rhsValue;
             }
         }
+
         if (leftHandSide.getType().equals(CatscriptType.INT) && rightHandSide.getType().equals(CatscriptType.INT)) {
-            Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
-            Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
+            if (lhsIntVal == null) {
+                lhsIntVal = (Integer) leftHandSide.evaluate(runtime);
+            }
+            if (rhsIntVal == null) {
+                rhsIntVal = (Integer) rightHandSide.evaluate(runtime);
+            }
             if (isAdd()) {
-                return lhsValue + rhsValue;
+                return lhsIntVal + rhsIntVal;
             } else {
-                return lhsValue - rhsValue;
+                return lhsIntVal - rhsIntVal;
             }
         }
+
         if (leftHandSide.getType().equals(CatscriptType.NULL)){
             return "null" + rightHandSide.evaluate(runtime);
         }
