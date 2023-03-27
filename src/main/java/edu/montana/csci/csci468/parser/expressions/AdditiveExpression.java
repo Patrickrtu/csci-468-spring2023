@@ -67,6 +67,7 @@ public class AdditiveExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
+        // TODO: figure out why this is returning AdditiveExpression
 //        if (getType().equals(CatscriptType.STRING)) {
         if (leftHandSide.getType().equals(CatscriptType.STRING) && rightHandSide.getType().equals(CatscriptType.INT)) {
             String lhsValue = (String) leftHandSide.evaluate(runtime);
