@@ -44,6 +44,11 @@ public class PrintStatement extends Statement {
                 getProgram().print(string);
                 return;
             }
+            if (expression.getType().equals(CatscriptType.OBJECT)) {
+                Object obj = (Object) expression.evaluate(runtime);
+                getProgram().print(obj);
+                return;
+            }
 //            if (expression.getType().isAssignableFrom(CatscriptType.getListType(CatscriptType.BOOLEAN))) {
             if (expression.getType().equals(CatscriptType.getListType(CatscriptType.OBJECT))) {
                 ListLiteralExpression listLiteralExpression = (ListLiteralExpression) expression.evaluate(runtime);
