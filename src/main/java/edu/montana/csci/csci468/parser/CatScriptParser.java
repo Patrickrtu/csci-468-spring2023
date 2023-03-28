@@ -235,15 +235,22 @@ public class CatScriptParser {
             ifStatement.setTrueStatements(statements);
             Token end = require(RIGHT_BRACE, ifStatement);
             if (tokens.matchAndConsume(ELSE)) {
-                //parseIfStatement();
-                require(LEFT_BRACE, ifStatement);
                 LinkedList<Statement> elseStatements = new LinkedList<Statement>();
-                while(!tokens.match(RIGHT_BRACE) && tokens.hasMoreTokens()){
-                    Statement statement = parseStatement();
-                    elseStatements.add(statement);
+                if (tokens.match(IF)) {
+                    Statement optionalIfStatement = parseIfStatement();
+                    elseStatements.add(optionalIfStatement);
+                    ifStatement.setElseStatements(elseStatements);
+                    end = optionalIfStatement.getEnd();
+                } else {
+                    require(LEFT_BRACE, ifStatement);
+                    while(!tokens.match(RIGHT_BRACE) && tokens.hasMoreTokens()){
+                        Statement statement = parseStatement();
+                        elseStatements.add(statement);
+                    }
+                    ifStatement.setElseStatements(elseStatements);
+                    end = require(RIGHT_BRACE, ifStatement);
                 }
-                ifStatement.setElseStatements(elseStatements);
-                end = require(RIGHT_BRACE, ifStatement);
+
             }
             ifStatement.setEnd(end);
             return ifStatement;

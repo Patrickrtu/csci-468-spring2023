@@ -71,43 +71,10 @@ public class ComparisonExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        Integer lhsValue = null;
-        Integer rhsValue = null;
-        try {
-            IntegerLiteralExpression lhsVal = (IntegerLiteralExpression) getLeftHandSide().evaluate(runtime);
-            lhsValue = (Integer) lhsVal.evaluate(runtime);
-        } catch (ClassCastException e) {
-        }
-
-        try {
-            IntegerLiteralExpression rhsVal = (IntegerLiteralExpression) getRightHandSide().evaluate(runtime);
-            rhsValue = (Integer) rhsVal.evaluate(runtime);
-        } catch (ClassCastException e) {
-        }
-
-
-
-        if (lhsValue == null) {
-            try {
-                AdditiveExpression lhsVal = (AdditiveExpression) getLeftHandSide().evaluate(runtime);
-                lhsValue = (Integer) lhsVal.evaluate(runtime);
-            } catch (ClassCastException e) {
-            }
-            if (lhsValue == null) {
-                lhsValue = (Integer) getLeftHandSide().evaluate(runtime);
-            }
-        }
-
-        if (rhsValue == null) {
-            try {
-                AdditiveExpression rhsVal = (AdditiveExpression) getRightHandSide().evaluate(runtime);
-                rhsValue = (Integer) rhsVal.evaluate(runtime);
-            } catch (ClassCastException e) {
-            }
-            if (rhsValue == null) {
-                rhsValue = (Integer) getRightHandSide().evaluate(runtime);
-            }
-        }
+        Object lhs = leftHandSide.evaluate(runtime);
+        Object rhs = rightHandSide.evaluate(runtime);
+        Integer lhsValue = (Integer) lhs;
+        Integer rhsValue = (Integer) rhs;
 
         if (isGreater()) {
             return lhsValue > rhsValue;

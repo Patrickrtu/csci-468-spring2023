@@ -7,6 +7,8 @@ import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.*;
 import edu.montana.csci.csci468.tokenizer.TokenType;
 
+import java.util.List;
+
 public class PrintStatement extends Statement {
     private Expression expression;
 
@@ -30,59 +32,41 @@ public class PrintStatement extends Statement {
     @Override
     // type_expression = 'int' | 'string' | 'bool' | 'object' | 'list' [, '<' , type_expression, '>']
     public void execute(CatscriptRuntime runtime) {
-        // eval twice when printing an identifier expression
-        if (expression.getStart() != null && expression.getStart().getType().equals(TokenType.IDENTIFIER)) {
-            if (expression.getType().equals(CatscriptType.BOOLEAN)) {
-                BooleanLiteralExpression booleanLiteralExpression = (BooleanLiteralExpression) expression.evaluate(runtime);
-                Boolean bool = (Boolean) booleanLiteralExpression.evaluate(runtime);
-                getProgram().print(bool);
-                return;
-            }
-            if (expression.getType().equals(CatscriptType.STRING)) {
-                StringLiteralExpression stringLiteralExpression = (StringLiteralExpression) expression.evaluate(runtime);
-                String string = (String) stringLiteralExpression.evaluate(runtime);
-                getProgram().print(string);
-                return;
-            }
-            if (expression.getType().equals(CatscriptType.OBJECT)) {
-                Object obj = (Object) expression.evaluate(runtime);
-                getProgram().print(obj);
-                return;
-            }
-            if (expression.getType().equals(CatscriptType.INT)) {
-                IntegerLiteralExpression integerLiteralExpression = null;
-                try {
-                    integerLiteralExpression = (IntegerLiteralExpression) expression.evaluate(runtime);
-                } catch (ClassCastException e) {
-
-                }
-                if (integerLiteralExpression != null) {
-                    Integer integer = (Integer) integerLiteralExpression.evaluate(runtime);
-                    getProgram().print(integer);
-                    return;
-                } else {
-                    Integer integer = (Integer) expression.evaluate(runtime);
-                    getProgram().print(integer);
-                    return;
-                }
-            }
-//            if (expression.getType().isAssignableFrom(CatscriptType.getListType(CatscriptType.BOOLEAN))) {
-            if (expression.getType().equals(CatscriptType.getListType(CatscriptType.OBJECT))) {
-                ListLiteralExpression listLiteralExpression = (ListLiteralExpression) expression.evaluate(runtime);
-                getProgram().print(listLiteralExpression.evaluate(runtime));
-                return;
-            }
-            if (expression.getType().equals(CatscriptType.getListType(CatscriptType.INT))) {
-                ListLiteralExpression listLiteralExpression = (ListLiteralExpression) expression.evaluate(runtime);
-                getProgram().print(listLiteralExpression.evaluate(runtime));
-                return;
-            }
+        Object evaluate = expression.evaluate(runtime);
+        Object printable = null;
+        if (evaluate instanceof Integer) {
+            printable = evaluate;
+        } else if (evaluate instanceof Boolean) {
+            printable = evaluate;
+        } else if (evaluate instanceof String) {
+            printable = evaluate;
+        } else if (evaluate instanceof List) {
+            printable = evaluate;
+        } else if (expression.getType().equals(CatscriptType.BOOLEAN)) {
+            BooleanLiteralExpression literalExpression = (BooleanLiteralExpression) evaluate;
+            printable = (Boolean) literalExpression.evaluate(runtime);
+        } else if (expression.getType().equals(CatscriptType.STRING)) {
+            StringLiteralExpression literalExpression = (StringLiteralExpression) evaluate;
+            printable = (String) literalExpression.evaluate(runtime);
+        } else if (expression.getType().equals(CatscriptType.INT)) {
+            IntegerLiteralExpression literalExpression = (IntegerLiteralExpression) evaluate;
+            printable = (Integer) literalExpression.evaluate(runtime);
+        } else if (expression.getType().equals(CatscriptType.OBJECT)) {
+            printable = expression.evaluate(runtime);
+        } else if (expression.getType().equals(CatscriptType.getListType(CatscriptType.OBJECT))) {
+            ListLiteralExpression literalExpression = (ListLiteralExpression) evaluate;
+            printable = literalExpression.evaluate(runtime);
+        } else if (expression.getType().equals(CatscriptType.getListType(CatscriptType.BOOLEAN))) {
+            ListLiteralExpression literalExpression = (ListLiteralExpression) evaluate;
+            printable = literalExpression.evaluate(runtime);
+        } else if (expression.getType().equals(CatscriptType.getListType(CatscriptType.INT))) {
+            ListLiteralExpression literalExpression = (ListLiteralExpression) evaluate;
+            printable = literalExpression.evaluate(runtime);
+        } else if (expression.getType().equals(CatscriptType.getListType(CatscriptType.STRING))) {
+            ListLiteralExpression literalExpression = (ListLiteralExpression) evaluate;
+            printable = literalExpression.evaluate(runtime);
         }
-//        if (expression.getType().equals(CatscriptType.ListType.INT)) {
-//            getProgram().print(expression.evaluate(runtime));
-//            return;
-//        };
-        getProgram().print(expression.evaluate(runtime));
+        getProgram().print(printable);
     }
 
     @Override
