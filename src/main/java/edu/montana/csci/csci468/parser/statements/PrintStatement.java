@@ -30,7 +30,7 @@ public class PrintStatement extends Statement {
     @Override
     // type_expression = 'int' | 'string' | 'bool' | 'object' | 'list' [, '<' , type_expression, '>']
     public void execute(CatscriptRuntime runtime) {
-        // we must eval twice when printing an identifier expression
+        // eval twice when printing an identifier expression
         if (expression.getStart() != null && expression.getStart().getType().equals(TokenType.IDENTIFIER)) {
             if (expression.getType().equals(CatscriptType.BOOLEAN)) {
                 BooleanLiteralExpression booleanLiteralExpression = (BooleanLiteralExpression) expression.evaluate(runtime);
@@ -48,6 +48,23 @@ public class PrintStatement extends Statement {
                 Object obj = (Object) expression.evaluate(runtime);
                 getProgram().print(obj);
                 return;
+            }
+            if (expression.getType().equals(CatscriptType.INT)) {
+                IntegerLiteralExpression integerLiteralExpression = null;
+                try {
+                    integerLiteralExpression = (IntegerLiteralExpression) expression.evaluate(runtime);
+                } catch (ClassCastException e) {
+
+                }
+                if (integerLiteralExpression != null) {
+                    Integer integer = (Integer) integerLiteralExpression.evaluate(runtime);
+                    getProgram().print(integer);
+                    return;
+                } else {
+                    Integer integer = (Integer) expression.evaluate(runtime);
+                    getProgram().print(integer);
+                    return;
+                }
             }
 //            if (expression.getType().isAssignableFrom(CatscriptType.getListType(CatscriptType.BOOLEAN))) {
             if (expression.getType().equals(CatscriptType.getListType(CatscriptType.OBJECT))) {

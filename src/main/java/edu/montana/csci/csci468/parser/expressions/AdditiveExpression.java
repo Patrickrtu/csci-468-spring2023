@@ -45,6 +45,21 @@ public class AdditiveExpression extends Expression {
             }
         }
         // TODO handle strings
+//        if (getType().equals(CatscriptType.INT)) {
+//            if (!leftHandSide.getType().equals(CatscriptType.INT)) {
+//                leftHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
+//            }
+//            if (!rightHandSide.getType().equals(CatscriptType.INT)) {
+//                rightHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
+//            }
+//        } else {
+//            if (!leftHandSide.getType().equals(CatscriptType.INT) && !leftHandSide.getType().equals(CatscriptType.STRING)) {
+//                leftHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
+//            }
+//            if (!rightHandSide.getType().equals(CatscriptType.INT) && !rightHandSide.getType().equals(CatscriptType.STRING)) {
+//                rightHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
+//            }
+//        }
     }
 
     @Override
@@ -67,98 +82,24 @@ public class AdditiveExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        // TODO: handle recursive behavior in lhs and rhs
-        AdditiveExpression lhsVal = null;
-        AdditiveExpression rhsVal = null;
-        Integer lhsIntVal = null;
-        Integer rhsIntVal = null;
-        try {
-            lhsVal = (AdditiveExpression) leftHandSide.evaluate(runtime);
-        } catch (ClassCastException e) {
-        }
-        if (lhsVal != null) {
-            lhsIntVal = (Integer)lhsVal.evaluate(runtime);
-        }
-
-        try {
-            rhsVal = (AdditiveExpression) rightHandSide.evaluate(runtime);
-        } catch (ClassCastException e) {
-        }
-        if (rhsVal != null) {
-            rhsIntVal = (Integer)rhsVal.evaluate(runtime);
-        }
-
-
-        if (leftHandSide.getType().equals(CatscriptType.STRING) && rightHandSide.getType().equals(CatscriptType.INT)) {
-            String lhsValue = (String) leftHandSide.evaluate(runtime);
-            if (rhsIntVal != null) {
-                if (isAdd()) {
-                    return lhsValue + rhsIntVal;
-                } else {
-                    addError(ErrorType.UNEXPECTED_TOKEN);
-                    return lhsValue + rhsIntVal;
-                }
-            }
-            Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
+        if (getType().equals(CatscriptType.STRING)) {
+            Object lhs = leftHandSide.evaluate(runtime);
+            Object rhs = rightHandSide.evaluate(runtime);
             if (isAdd()) {
-                return lhsValue + rhsValue;
+                String s;
+                return s = "" + lhs + rhs;
             } else {
-                addError(ErrorType.UNEXPECTED_TOKEN);
-                return lhsValue + rhsValue;
+                return null;
             }
-        }
-
-        if (leftHandSide.getType().equals(CatscriptType.STRING) && rightHandSide.getType().equals(CatscriptType.STRING)) {
-            String lhsValue = (String) leftHandSide.evaluate(runtime);
-            String rhsValue = (String) rightHandSide.evaluate(runtime);
+        } else {
+            Integer integerLHSValue = (Integer) leftHandSide.evaluate(runtime);
+            Integer integerRHSValue = (Integer) rightHandSide.evaluate(runtime);
             if (isAdd()) {
-                return lhsValue + rhsValue;
+                return integerLHSValue + integerRHSValue;
             } else {
-                addError(ErrorType.UNEXPECTED_TOKEN);
-                return lhsValue + rhsValue;
+                return integerLHSValue - integerRHSValue;
             }
         }
-        if (leftHandSide.getType().equals(CatscriptType.INT) && rightHandSide.getType().equals(CatscriptType.STRING)) {
-            String rhsValue = (String) rightHandSide.evaluate(runtime);
-
-            if (lhsIntVal != null) {
-                if (isAdd()) {
-                    return lhsIntVal + rhsValue;
-                } else {
-                    addError(ErrorType.UNEXPECTED_TOKEN);
-                    return lhsIntVal + rhsValue;
-                }
-            }
-            Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
-            if (isAdd()) {
-                return lhsValue + rhsValue;
-            } else {
-                addError(ErrorType.UNEXPECTED_TOKEN);
-                return lhsValue + rhsValue;
-            }
-        }
-
-        if (leftHandSide.getType().equals(CatscriptType.INT) && rightHandSide.getType().equals(CatscriptType.INT)) {
-            if (lhsIntVal == null) {
-                lhsIntVal = (Integer) leftHandSide.evaluate(runtime);
-            }
-            if (rhsIntVal == null) {
-                rhsIntVal = (Integer) rightHandSide.evaluate(runtime);
-            }
-            if (isAdd()) {
-                return lhsIntVal + rhsIntVal;
-            } else {
-                return lhsIntVal - rhsIntVal;
-            }
-        }
-
-        if (leftHandSide.getType().equals(CatscriptType.NULL)){
-            return "null" + rightHandSide.evaluate(runtime);
-        }
-        if (rightHandSide.getType().equals(CatscriptType.NULL)){
-            return leftHandSide.evaluate(runtime) + "null";
-        }
-        return null;
     }
 
     @Override
