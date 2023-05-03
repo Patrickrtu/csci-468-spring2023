@@ -4,8 +4,8 @@ Please add the following items to the `/capstone/portfolio` directory:
 
 * A zip file of the `/src` director named `/capstone/portfolio/source.zip`
 * A PDF named `/capstone/portfolio/<first_name>_<last_name>_portfolio.pdf` where
-    * `<first_name>` is your first name
-    * `<last_name>` is your last name
+  * `<first_name>` is your first name
+  * `<last_name>` is your last name
 
 The PDF should contain all the sections outlined in `Capstone.md`.  You may use whatever software
 you want to author the PDF.
@@ -19,4 +19,3 @@ Notes on each section
 * Section 5: UML - Include and discuss one of the UML diagrams included in this directory
 * Section 6: Design trade-offs - You must write this, maybe discuss recursive descent vs. a parser generator?
 * Section 7: Software development life cycle model - We did Test Driven Development, please discuss your experience with it
-
