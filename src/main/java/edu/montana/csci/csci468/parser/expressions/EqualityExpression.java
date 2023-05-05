@@ -8,6 +8,8 @@ import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
 import org.apache.commons.lang.ObjectUtils;
 
+import java.util.Objects;
+
 public class EqualityExpression extends Expression {
 
     private final Token operator;
@@ -115,6 +117,13 @@ public class EqualityExpression extends Expression {
 
     @Override
     public void compile(ByteCodeGenerator code) {
+        getLeftHandSide().compile(code);
+        // box lhs
+        getRightHandSide().compile(code);
+        // box rhs
+        // invoke static Objects.equals() method
+
+        // may have to consider when things are not equal
         super.compile(code);
     }
 

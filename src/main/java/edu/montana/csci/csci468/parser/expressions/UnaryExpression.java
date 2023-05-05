@@ -78,6 +78,7 @@ public class UnaryExpression extends Expression {
 
     @Override
     public void compile(ByteCodeGenerator code) {
+        // a lot like what we did in comparison
         super.compile(code);
     }
 
