@@ -6,12 +6,8 @@ import java.util.LinkedList;
 
 public class Scratch {
 
-    int add(int i) {
-        return i + 13;
-    }
-
-    public int intFunc(int i1, int i2) {
-        return i1 + i2;
+    void testUnary(int i) {
+        System.out.println(-i);
     }
 
     public static void main(String[] args) {

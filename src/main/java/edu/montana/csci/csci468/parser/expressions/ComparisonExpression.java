@@ -103,6 +103,7 @@ public class ComparisonExpression extends Expression {
         Label setTrue = new Label();
         Label endLabel = new Label();
 
+        // if the comparison passes, we'll push true on the stack, otherwise jump over that and push false
         if (isGreater()) {
             code.addJumpInstruction(Opcodes.IF_ICMPGT, setTrue);
         } else if (isLessThan()) {
@@ -114,22 +115,12 @@ public class ComparisonExpression extends Expression {
         } else {
             return;
         }
-        // <lhs>
-        // <rhs>
-
-        // if_icmpge PUSH_FALSE
-        // PUSH TRUE
-        // GOTO END_LABEL
-        // PUSH_FALSE PUSH FALSE
-        // END LABEL
-
 
         code.pushConstantOntoStack(false);
         code.addJumpInstruction(Opcodes.GOTO, endLabel);
         code.addLabel(setTrue);
         code.pushConstantOntoStack(true);
-
-        super.compile(code);
+        code.addLabel(endLabel);
     }
 
 }

@@ -129,7 +129,20 @@ public class ForStatement extends Statement {
         code.addJumpInstruction(Opcodes.IFEQ, forLoopEnd);
 
         // invoke next() on the iterator
-        // then, load that into iteratorSlot
+        code.addMethodInstruction(Opcodes.INVOKEINTERFACE, ByteCodeGenerator.internalNameFor(Iterator.class),
+                "next", "()Ljava/lang/Object;");
+        String loopVariableTypeInternalName = ByteCodeGenerator.internalNameFor(getComponentType().getJavaType());
+        code.addTypeInstruction(Opcodes.CHECKCAST, loopVariableTypeInternalName);
+        unbox(code, getComponentType());
+
+        Integer loopVarSlot = code.createLocalStorageSlotFor(variableName);
+        // TODO: store the value into loopVarSlot, similar to the code in varStatement
+        // either code.addVarInstruction(Opcodes.ASTORE, loopVarSlot); or code.addVarInstruction(Opcodes.ISTORE, loopVarSlot);
+        // depending on whether the value is primitive or non-primitive
+
+        for (Statement statement : body) {
+            statement.compile(code);
+        }
 
         code.addLabel(forLoopEnd);
     }

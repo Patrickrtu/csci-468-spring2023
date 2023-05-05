@@ -8,6 +8,8 @@ import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 
 public class UnaryExpression extends Expression {
 
@@ -76,10 +78,45 @@ public class UnaryExpression extends Expression {
         super.transpile(javascript);
     }
 
+//    testUnary(I)V
+//    L0
+//    LINENUMBER 10 L0
+//    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+//    ILOAD 1
+//    INEG
+//    INVOKEVIRTUAL java/io/PrintStream.println (I)V
+//            L1
+//    LINENUMBER 11 L1
+//            RETURN
+//    L2
+//    LOCALVARIABLE this Ledu/montana/csci/csci468/demo/Scratch; L0 L2 0
+//    LOCALVARIABLE i I L0 L2 1
+//    MAXSTACK = 2
+//    MAXLOCALS = 2
     @Override
     public void compile(ByteCodeGenerator code) {
         // a lot like what we did in comparison
-        super.compile(code);
+        // compare if the thing is true or not, and invert it
+        // or if it's a negative, multiply by -1, and push a constant ?imul operator?
+
+        getRightHandSide().compile(code);
+
+        if (isMinus()) {
+            code.addInstruction(Opcodes.INEG);
+        } else if (isNot()) {
+            code.pushConstantOntoStack(true);
+            code.addInstruction(Opcodes.IXOR);
+        } else {
+            return;
+        }
+        // <lhs>
+        // <rhs>
+
+        // if_icmpge PUSH_FALSE
+        // PUSH TRUE
+        // GOTO END_LABEL
+        // PUSH_FALSE PUSH FALSE
+        // END LABEL
     }
 
 

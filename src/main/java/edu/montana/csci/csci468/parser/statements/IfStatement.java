@@ -91,6 +91,14 @@ public class IfStatement extends Statement {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        super.compile(code);
+        // have 2 labels
+        // compile the expression to leave value on operand stack
+        // IFEQ to test if value is 0 aka false
+        //  jump to false/else branch if so
+        //  otherwise, compile true branch, jump over false/else branch unconditionally
+        //  label false/else branch
+        //  compile false/else branch
+        //  ...
+
     }
 }

@@ -50,6 +50,10 @@ public class FunctionCallStatement extends Statement {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        super.compile(code);
+        // compile FCE
+
+        // function foo() : int { return 10 }
+
+        // if the FCE is NOT void, we need to pop the value off the stack, Opcodes.POP
     }
 }
