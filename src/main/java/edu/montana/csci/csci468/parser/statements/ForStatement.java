@@ -7,7 +7,11 @@ import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.Opcodes;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -92,7 +96,42 @@ public class ForStatement extends Statement {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        super.compile(code);
+        // First, allocate a slot for the iterator
+        Integer iteratorSlot = code.nextLocalStorageSlot();
+        Label forLoopStart = new Label();
+        Label forLoopEnd = new Label();
+        // for (x in [1,2,3])
+        // leave pointer to the list literal on the stack
+        expression.compile(code);
+        // next, invoke the iterator method on the pointer
+        // List foo = new ArrayList();
+        // foo.iterator();
+        // because iterator() is defined on an interface, so the bytecode instruction is INVOKEINTERFACE
+        code.addMethodInstruction(Opcodes.INVOKEINTERFACE, ByteCodeGenerator.internalNameFor(List.class),
+                "iterator", "()Ljava/util/Iterator;");
+        // next, we want to store the iterator into iteratorSlot
+        code.addVarInstruction(Opcodes.ASTORE, iteratorSlot);
+
+//        List l = new ArrayList();
+//        Iterator iterator = l.iterator();
+//        iterator.hasNext();
+
+
+
+        // start the loop
+        code.addLabel(forLoopStart);
+        // put the iterator back onto the stack
+        code.addVarInstruction(Opcodes.ALOAD, iteratorSlot);
+        code.addMethodInstruction(Opcodes.INVOKEINTERFACE, ByteCodeGenerator.internalNameFor(Iterator.class),
+                "hasNext", "()Z");
+
+        // then, do an IFEQ
+        code.addJumpInstruction(Opcodes.IFEQ, forLoopEnd);
+
+        // invoke next() on the iterator
+        // then, load that into iteratorSlot
+
+        code.addLabel(forLoopEnd);
     }
 
 }

@@ -7,6 +7,7 @@ import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
+import org.objectweb.asm.Opcodes;
 
 public class IdentifierExpression extends Expression {
     private final String name;
@@ -51,7 +52,18 @@ public class IdentifierExpression extends Expression {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        super.compile(code);
+        Integer slot = code.resolveLocalStorageSlotFor(name);
+        if (slot == null) {
+            // global variable
+            // distinguish between primitives and non-primitives
+            // push on this pointer
+            // load field
+            // Opcodes.GETFIELD
+        } else {
+            // local variable
+            // distinguish between primitives and non-primitives
+            // Opcodes.ILOAD or Opcodes.ALOAD, use slot
+        }
     }
 
 

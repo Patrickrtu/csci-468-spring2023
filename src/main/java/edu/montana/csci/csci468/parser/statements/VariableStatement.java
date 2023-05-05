@@ -9,6 +9,7 @@ import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 import edu.montana.csci.csci468.parser.expressions.IdentifierExpression;
 import edu.montana.csci.csci468.tokenizer.TokenType;
+import org.objectweb.asm.Opcodes;
 
 public class VariableStatement extends Statement {
     private Expression expression;
@@ -122,6 +123,29 @@ public class VariableStatement extends Statement {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        super.compile(code);
+        if (isGlobal()) {
+            // distinguish between primitives and non-primitives
+            if (getType().equals(CatscriptType.INT) || getType().equals(CatscriptType.BOOLEAN)) {
+                code.addField(variableName, "I");
+                code.addVarInstruction(Opcodes.ALOAD, 0);
+                expression.compile(code);
+                code.addFieldInstruction(Opcodes.PUTFIELD, variableName, "I", code.getProgramInternalName());
+            } else {
+                String s = ByteCodeGenerator.internalNameFor(getType().getJavaType());
+                // recall that there's an L for descriptors, Ljava/lang...
+                // otherwise quite similar to the above
+            }
+        } else {
+            // store in slots, first allocate a slot.
+            Integer slotNumber = code.createLocalStorageSlotFor(variableName);
+            if (getType().equals(CatscriptType.INT) || getType().equals(CatscriptType.BOOLEAN)) {
+                expression.compile(code);
+                code.addVarInstruction(Opcodes.ISTORE, slotNumber);
+            } else {
+                expression.compile(code);
+                //TODO: change ISTORE
+                code.addVarInstruction(Opcodes.ISTORE, slotNumber);
+            }
+        }
     }
 }
