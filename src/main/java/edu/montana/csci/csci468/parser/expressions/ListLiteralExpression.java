@@ -78,9 +78,9 @@ public class ListLiteralExpression extends Expression {
             code.addInstruction(Opcodes.DUP);
             value.compile(code);
             box(code, value.getType());
+
             code.addMethodInstruction(Opcodes.INVOKEVIRTUAL, "java/util/LinkedList",
-                    "add", "(Ljava/lang/Object;)Z");
-            code.addInstruction(Opcodes.POP);
+                    "push", "(Ljava/lang/Object;)V");
         }
     }
 

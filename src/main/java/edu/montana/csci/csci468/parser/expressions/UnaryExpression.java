@@ -106,8 +106,6 @@ public class UnaryExpression extends Expression {
         } else if (isNot()) {
             code.pushConstantOntoStack(true);
             code.addInstruction(Opcodes.IXOR);
-        } else {
-            return;
         }
         // <lhs>
         // <rhs>

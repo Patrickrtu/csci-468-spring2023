@@ -7,8 +7,11 @@ import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
 import org.apache.commons.lang.ObjectUtils;
+import org.objectweb.asm.Opcodes;
 
 import java.util.Objects;
+
+import static edu.montana.csci.csci468.bytecode.ByteCodeGenerator.internalNameFor;
 
 public class EqualityExpression extends Expression {
 
@@ -115,16 +118,39 @@ public class EqualityExpression extends Expression {
         super.transpile(javascript);
     }
 
+//    testEquality(I)V
+//    L0
+//    LINENUMBER 11 L0
+//    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
+//    ICONST_1
+//    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+//    ICONST_1
+//    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+//    INVOKESTATIC java/util/Objects.equals (Ljava/lang/Object;Ljava/lang/Object;)Z
+//    INVOKEVIRTUAL java/io/PrintStream.println (Z)V
+//            L1
+//    LINENUMBER 12 L1
+//            RETURN
+//    L2
+
     @Override
     public void compile(ByteCodeGenerator code) {
         getLeftHandSide().compile(code);
         // box lhs
+        box(code, getLeftHandSide().getType());
         getRightHandSide().compile(code);
         // box rhs
-        // invoke static Objects.equals() method
-
-        // may have to consider when things are not equal
-        super.compile(code);
+        box(code, getRightHandSide().getType());
+        if (isEqual()) {
+            // invoke static Objects.equals() method
+            code.addMethodInstruction(Opcodes.INVOKESTATIC, internalNameFor(Objects.class),
+                "equals", "(Ljava/lang/Object;Ljava/lang/Object;)Z");
+        } else if (isNotEqual()) {
+            code.addMethodInstruction(Opcodes.INVOKESTATIC, internalNameFor(Objects.class),
+                    "equals", "(Ljava/lang/Object;Ljava/lang/Object;)Z");
+            code.pushConstantOntoStack(true);
+            code.addInstruction(Opcodes.IXOR);
+        }
     }
 
 
