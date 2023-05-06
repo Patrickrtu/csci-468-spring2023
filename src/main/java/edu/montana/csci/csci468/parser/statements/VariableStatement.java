@@ -11,6 +11,8 @@ import edu.montana.csci.csci468.parser.expressions.IdentifierExpression;
 import edu.montana.csci.csci468.tokenizer.TokenType;
 import org.objectweb.asm.Opcodes;
 
+import static edu.montana.csci.csci468.bytecode.ByteCodeGenerator.internalNameFor;
+
 public class VariableStatement extends Statement {
     private Expression expression;
     private String variableName;
@@ -118,7 +120,9 @@ public class VariableStatement extends Statement {
 
     @Override
     public void transpile(StringBuilder javascript) {
-        super.transpile(javascript);
+        javascript.append("var").append(variableName).append("=");
+        expression.transpile(javascript);
+        javascript.append(";");
     }
 
     @Override
@@ -131,20 +135,23 @@ public class VariableStatement extends Statement {
                 expression.compile(code);
                 code.addFieldInstruction(Opcodes.PUTFIELD, variableName, "I", code.getProgramInternalName());
             } else {
-                String s = ByteCodeGenerator.internalNameFor(getType().getJavaType());
-                // recall that there's an L for descriptors, Ljava/lang...
-                // otherwise quite similar to the above
+                String internalName = ByteCodeGenerator.internalNameFor(getType().getJavaType());
+                String descriptor = "L" + internalName + ";";
+                code.addField(variableName, descriptor);
+                code.addVarInstruction(Opcodes.ALOAD, 0);
+                expression.compile(code);
+                code.addFieldInstruction(Opcodes.PUTFIELD, variableName, descriptor, code.getProgramInternalName());
             }
         } else {
             // store in slots, first allocate a slot.
             Integer slotNumber = code.createLocalStorageSlotFor(variableName);
             if (getType().equals(CatscriptType.INT) || getType().equals(CatscriptType.BOOLEAN)) {
                 expression.compile(code);
+                // consume value on the stack
                 code.addVarInstruction(Opcodes.ISTORE, slotNumber);
             } else {
                 expression.compile(code);
-                //TODO: change ISTORE
-                code.addVarInstruction(Opcodes.ISTORE, slotNumber);
+                code.addVarInstruction(Opcodes.ASTORE, slotNumber);
             }
         }
     }

@@ -166,7 +166,13 @@ public class FunctionDefinitionStatement extends Statement {
         code.pushMethod(Opcodes.ACC_PUBLIC, name, getDescriptor());
         // allocate slots for each parameter of the function
         for (String argumentName : argumentNames) {
-
+            Integer slotNumber = code.createLocalStorageSlotFor(argumentName);
+//            if (getType().equals(CatscriptType.INT) || getType().equals(CatscriptType.BOOLEAN)) {
+//                // consume value on the stack
+//                code.addVarInstruction(Opcodes.ISTORE, slotNumber);
+//            } else {
+//                code.addVarInstruction(Opcodes.ASTORE, slotNumber);
+//            }
         }
 
         // compile funciton body
@@ -177,7 +183,14 @@ public class FunctionDefinitionStatement extends Statement {
 
         // if return type is void
         // add an implicit return instruction Opcodes.RETURN
-
+        if (getType().equals(CatscriptType.VOID)) {
+            code.addInstruction(Opcodes.RETURN);
+        } else if (getType().equals(CatscriptType.INT) || getType().equals(CatscriptType.BOOLEAN)) {
+            code.addInstruction(Opcodes.IRETURN);
+        } else {
+            box(code, getType());
+            code.addInstruction(Opcodes.ARETURN);
+        }
 
         code.popMethod();
     }

@@ -7,9 +7,8 @@ import java.util.Objects;
 
 public class Scratch {
 
-    void testLinkedList(int i) {
-        LinkedList<Object> list = new LinkedList<>();
-        list.push(1);
+    public static void testVarStatement() {
+        var foo = 1;
     }
 
     public static void main(String[] args) {
