@@ -7,8 +7,11 @@ import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import org.objectweb.asm.Opcodes;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static edu.montana.csci.csci468.bytecode.ByteCodeGenerator.internalNameFor;
 
 public class ListLiteralExpression extends Expression {
     List<Expression> values;
@@ -53,13 +56,9 @@ public class ListLiteralExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        LinkedList<Object> objects = new LinkedList<>();
-        for (Expression value : values) {
-            // evaluate the value and add to list
-            Object element = value.evaluate(runtime);
-            objects.push(element);
-        }
-        return objects;
+        ArrayList<Object> array = new ArrayList<>();
+        for (Expression value : values) array.add(value.evaluate(runtime));
+        return array;
     }
 
     @Override
@@ -69,18 +68,15 @@ public class ListLiteralExpression extends Expression {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        code.addTypeInstruction(Opcodes.NEW, "java/util/LinkedList");
+        code.addTypeInstruction(Opcodes.NEW, internalNameFor(ArrayList.class));
         code.addInstruction(Opcodes.DUP);
-        code.addMethodInstruction(Opcodes.INVOKESPECIAL, "java/util/LinkedList",
-                "<init>", "()V");
-        for (Expression value : values) {
-            // since invokevirtual consumes the pointer on the stack, we need to dupe it first
+        code.addMethodInstruction(Opcodes.INVOKESPECIAL, internalNameFor(ArrayList.class), "<init>", "()V");
+        for(Expression value : values) {
             code.addInstruction(Opcodes.DUP);
             value.compile(code);
             box(code, value.getType());
-
-            code.addMethodInstruction(Opcodes.INVOKEVIRTUAL, "java/util/LinkedList",
-                    "push", "(Ljava/lang/Object;)V");
+            code.addMethodInstruction(Opcodes.INVOKEVIRTUAL, internalNameFor(ArrayList.class),"add", "(Ljava/lang/Object;)Z");
+            code.addInstruction(Opcodes.POP);
         }
     }
 

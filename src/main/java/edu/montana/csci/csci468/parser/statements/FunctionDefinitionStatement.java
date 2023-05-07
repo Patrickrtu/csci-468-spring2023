@@ -103,10 +103,12 @@ public class FunctionDefinitionStatement extends Statement {
         if (lastStatement instanceof ReturnStatement) {
             return true;
         } else if (lastStatement instanceof IfStatement) {
-            IfStatement ifStatement = (IfStatement) lastStatement;
-            return validateReturnCoverage(ifStatement.getTrueStatements()) && validateReturnCoverage(ifStatement.getElseStatements());
+            IfStatement ifStmt = (IfStatement) lastStatement;
+            return validateReturnCoverage(ifStmt.getTrueStatements()) &&
+                    validateReturnCoverage(ifStmt.getElseStatements());
+        } else {
+            return false;
         }
-        return false;
     }
 
     public Object invoke(CatscriptRuntime runtime, List<Object> args) {
@@ -152,9 +154,7 @@ public class FunctionDefinitionStatement extends Statement {
     // Implementation
     //==============================================================
     @Override
-    public void execute(CatscriptRuntime runtime) {
-        return;
-    }
+    public void execute(CatscriptRuntime runtime) {}
 
     @Override
     public void transpile(StringBuilder javascript) {
@@ -165,33 +165,16 @@ public class FunctionDefinitionStatement extends Statement {
     public void compile(ByteCodeGenerator code) {
         code.pushMethod(Opcodes.ACC_PUBLIC, name, getDescriptor());
         // allocate slots for each parameter of the function
-        for (String argumentName : argumentNames) {
-            Integer slotNumber = code.createLocalStorageSlotFor(argumentName);
-//            if (getType().equals(CatscriptType.INT) || getType().equals(CatscriptType.BOOLEAN)) {
-//                // consume value on the stack
-//                code.addVarInstruction(Opcodes.ISTORE, slotNumber);
-//            } else {
-//                code.addVarInstruction(Opcodes.ASTORE, slotNumber);
-//            }
+        for(String argName : argumentNames) {
+            code.createLocalStorageSlotFor(argName);
         }
-
-        // compile funciton body
-        // recursive call over funciton body
-        for (Statement statement : body) {
+        for(Statement statement : body){
             statement.compile(code);
         }
-
-        // if return type is void
-        // add an implicit return instruction Opcodes.RETURN
-        if (getType().equals(CatscriptType.VOID)) {
+        if(type.equals(CatscriptType.VOID)){
             code.addInstruction(Opcodes.RETURN);
-        } else if (getType().equals(CatscriptType.INT) || getType().equals(CatscriptType.BOOLEAN)) {
-            code.addInstruction(Opcodes.IRETURN);
-        } else {
-            box(code, getType());
-            code.addInstruction(Opcodes.ARETURN);
         }
-
         code.popMethod();
     }
+
 }

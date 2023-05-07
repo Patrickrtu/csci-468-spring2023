@@ -72,18 +72,18 @@ public class IfStatement extends Statement {
     //==============================================================
     @Override
     public void execute(CatscriptRuntime runtime) {
-        Boolean conditionalResult = (Boolean) expression.evaluate(runtime);
-        runtime.pushScope();
+        Object conditionalResult = expression.evaluate(runtime);
+
         if (Boolean.TRUE.equals(conditionalResult)) {
             for (Statement trueStatement : trueStatements) {
                 trueStatement.execute(runtime);
             }
         } else {
-            for (Statement elseStatement : elseStatements) {
-                elseStatement.execute(runtime);
+            for (Statement elsestatement : elseStatements) {
+                elsestatement.execute(runtime);
             }
+            runtime.popScope();
         }
-        runtime.popScope();
     }
 
     @Override
@@ -93,7 +93,6 @@ public class IfStatement extends Statement {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        // have 2 labels
         Label elseLabel = new Label();
         Label endLabel = new Label();
 
@@ -114,7 +113,5 @@ public class IfStatement extends Statement {
             elseStatement.compile(code);
         }
         code.addLabel(endLabel);
-        //  ...
-
     }
 }

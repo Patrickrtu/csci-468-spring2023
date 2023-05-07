@@ -78,4 +78,11 @@ public class CatscriptBasicExpressionEvalTest extends CatscriptTestBase {
         assertEquals(1, evaluateExpression("(1)"));
     }
 
+    @Test
+    void BoolCallFunctionFromAnotherFunction() {
+        assertEquals("true\n", executeProgram("function foo(x : bool) { print(x) }" +
+                "function main() { foo(true)}" +
+                "main()"
+        ));
+    }
 }

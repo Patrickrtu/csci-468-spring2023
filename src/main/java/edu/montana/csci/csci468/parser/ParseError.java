@@ -24,14 +24,12 @@ public class ParseError {
 
     public String getFullMessage() {
         StringBuilder sb = new StringBuilder();
-        if (location != null) {
-            String lineStart = "Line " + location.getLine() + ":";
-            sb.append(lineStart);
-            sb.append(location.getLineContent());
-            sb.append("\n");
-            sb.append(" ".repeat(lineStart.length() + location.getLineOffset() - 1));
-            sb.append("^\n\n");
-        }
+        String lineStart = "Line " + location.getLine() + ":";
+        sb.append(lineStart);
+        sb.append(location.getLineContent());
+        sb.append("\n");
+        sb.append(" ".repeat(lineStart.length() + location.getLineOffset() - 1));
+        sb.append("^\n\n");
         sb.append("Error: ");
         sb.append(message);
         return sb.toString();

@@ -20,12 +20,10 @@ public class FunctionCallExpression extends Expression {
 
     public FunctionCallExpression(String functionName, List<Expression> arguments) {
         this.arguments = new LinkedList<>();
-        this.name = functionName;
-        if (!arguments.isEmpty()) {
-            for (Expression value : arguments) {
-                this.arguments.add(addChild(value));
-            }
+        for (Expression value : arguments) {
+            this.arguments.add(addChild(value));
         }
+        this.name = functionName;
     }
 
     public List<Expression> getArguments() {
@@ -72,9 +70,9 @@ public class FunctionCallExpression extends Expression {
     public Object evaluate(CatscriptRuntime runtime) {
         FunctionDefinitionStatement function = getProgram().getFunction(name);
         List<Object> args = new ArrayList<>();
-        for (Expression argument : arguments) {
-            Object paramValue = argument.evaluate(runtime);
-            args.add(paramValue);
+        for(Expression arguments : arguments) {
+            Object paramvalues = arguments.evaluate(runtime);
+            args.add(paramvalues);
         }
         return function.invoke(runtime, args);
     }
@@ -86,20 +84,18 @@ public class FunctionCallExpression extends Expression {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        // setting up our 'this' pointer
         code.addVarInstruction(Opcodes.ALOAD, 0);
-        FunctionDefinitionStatement function = getProgram().getFunction(name);
+        FunctionDefinitionStatement func = getProgram().getFunction(name);
         for (int i = 0; i < arguments.size(); i++) {
-            Expression argument = arguments.get(i);
-            argument.compile(code);
-            if (function.getParameterType(i).equals(CatscriptType.OBJECT)) {
-                box(code, argument.getType());
+            Expression expression = arguments.get(i);
+            expression.compile(code);
+            CatscriptType parameterType = func.getParameterType(i);
+            if (parameterType == CatscriptType.OBJECT) {
+                if(expression.getType() == CatscriptType.BOOLEAN || expression.getType() == CatscriptType.INT){
+                    box(code, expression.getType());
+                }
             }
         }
-
-        code.addMethodInstruction(Opcodes.INVOKEVIRTUAL, code.getProgramInternalName(),
-                name, function.getDescriptor());
+        code.addMethodInstruction(Opcodes.INVOKEVIRTUAL, code.getProgramInternalName(), name,func.getDescriptor());
     }
-
-
 }

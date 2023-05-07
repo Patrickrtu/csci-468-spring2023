@@ -10,8 +10,6 @@ import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
 import org.objectweb.asm.Opcodes;
 
-import static edu.montana.csci.csci468.bytecode.ByteCodeGenerator.internalNameFor;
-
 public class FactorExpression extends Expression {
 
     private final Token operator;
@@ -64,12 +62,12 @@ public class FactorExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        Integer lhsVal = (Integer) leftHandSide.evaluate(runtime);
-        Integer rhsVal = (Integer) rightHandSide.evaluate(runtime);
+        Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
+        Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
         if (isMultiply()) {
-            return lhsVal * rhsVal;
+            return lhsValue * rhsValue;
         } else {
-            return lhsVal / rhsVal;
+            return lhsValue / rhsValue;
         }
     }
 
@@ -88,6 +86,4 @@ public class FactorExpression extends Expression {
             code.addInstruction(Opcodes.IDIV);
         }
     }
-
-
 }

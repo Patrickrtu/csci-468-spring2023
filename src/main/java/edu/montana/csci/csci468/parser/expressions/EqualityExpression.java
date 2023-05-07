@@ -6,7 +6,7 @@ import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
-import org.apache.commons.lang.ObjectUtils;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 
 import java.util.Objects;
@@ -41,9 +41,7 @@ public class EqualityExpression extends Expression {
     public boolean isEqual() {
         return operator.getType().equals(TokenType.EQUAL_EQUAL);
     }
-    public boolean isNotEqual() {
-        return operator.getType().equals(TokenType.BANG_EQUAL);
-    }
+
     @Override
     public void validate(SymbolTable symbolTable) {
         leftHandSide.validate(symbolTable);
@@ -61,55 +59,12 @@ public class EqualityExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        // TODO: handle String, list, Identifier...
+        Object lhsValue = (Object) leftHandSide.evaluate(runtime);
+        Object rhsValue = (Object) rightHandSide.evaluate(runtime);
         if (isEqual()) {
-            // only return true when both sides have the same type
-            if (getLeftHandSide().getType().equals(getRightHandSide().getType())) {
-                if (getLeftHandSide().getType().equals(CatscriptType.INT)) {
-                    Integer lhsVal = (Integer) getLeftHandSide().evaluate(runtime);
-                    Integer rhsVal = (Integer) getRightHandSide().evaluate(runtime);
-                    if (isEqual()) {
-                        return lhsVal == rhsVal;
-                    } else {
-                        return null;
-                    }
-                } else if (getLeftHandSide().getType().equals(CatscriptType.BOOLEAN)) {
-                    Boolean lhsVal = (Boolean) getLeftHandSide().evaluate(runtime);
-                    Boolean rhsVal = (Boolean) getRightHandSide().evaluate(runtime);
-                    return lhsVal == rhsVal;
-                } else if (getLeftHandSide().getType().equals(CatscriptType.NULL)) {
-                    return null == null;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else if (isNotEqual()) {
-            // only return false when both sides have the same type and evaluates differently
-            if (getLeftHandSide().getType().equals(getRightHandSide().getType())) {
-                if (getLeftHandSide().getType().equals(CatscriptType.INT)) {
-                    Integer lhsVal = (Integer) getLeftHandSide().evaluate(runtime);
-                    Integer rhsVal = (Integer) getRightHandSide().evaluate(runtime);
-                    if (isEqual()) {
-                        return lhsVal != rhsVal;
-                    } else {
-                        return null;
-                    }
-                } else if (getLeftHandSide().getType().equals(CatscriptType.BOOLEAN)) {
-                    Boolean lhsVal = (Boolean) getLeftHandSide().evaluate(runtime);
-                    Boolean rhsVal = (Boolean) getRightHandSide().evaluate(runtime);
-                    return lhsVal != rhsVal;
-                } else if (getLeftHandSide().getType().equals(CatscriptType.NULL)) {
-                    return null != null;
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
-            }
+            return Objects.equals(lhsValue, rhsValue);
         } else {
-            return null;
+            return !Objects.equals(lhsValue, rhsValue);
         }
     }
 
@@ -118,40 +73,22 @@ public class EqualityExpression extends Expression {
         super.transpile(javascript);
     }
 
-//    testEquality(I)V
-//    L0
-//    LINENUMBER 11 L0
-//    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
-//    ICONST_1
-//    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
-//    ICONST_1
-//    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
-//    INVOKESTATIC java/util/Objects.equals (Ljava/lang/Object;Ljava/lang/Object;)Z
-//    INVOKEVIRTUAL java/io/PrintStream.println (Z)V
-//            L1
-//    LINENUMBER 12 L1
-//            RETURN
-//    L2
-
     @Override
     public void compile(ByteCodeGenerator code) {
         getLeftHandSide().compile(code);
-        // box lhs
         box(code, getLeftHandSide().getType());
         getRightHandSide().compile(code);
-        // box rhs
         box(code, getRightHandSide().getType());
         if (isEqual()) {
             // invoke static Objects.equals() method
             code.addMethodInstruction(Opcodes.INVOKESTATIC, internalNameFor(Objects.class),
-                "equals", "(Ljava/lang/Object;Ljava/lang/Object;)Z");
-        } else if (isNotEqual()) {
+                    "equals", "(Ljava/lang/Object;Ljava/lang/Object;)Z");
+        } else {
             code.addMethodInstruction(Opcodes.INVOKESTATIC, internalNameFor(Objects.class),
                     "equals", "(Ljava/lang/Object;Ljava/lang/Object;)Z");
             code.pushConstantOntoStack(true);
             code.addInstruction(Opcodes.IXOR);
         }
     }
-
 
 }

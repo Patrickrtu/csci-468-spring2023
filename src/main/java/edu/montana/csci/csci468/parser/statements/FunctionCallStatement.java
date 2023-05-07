@@ -6,8 +6,6 @@ import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 import edu.montana.csci.csci468.parser.expressions.FunctionCallExpression;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class FunctionCallStatement extends Statement {
@@ -33,14 +31,9 @@ public class FunctionCallStatement extends Statement {
     // Implementation
     //==============================================================
     @Override
-    public void execute(CatscriptRuntime runtime) {
-        FunctionDefinitionStatement function = getProgram().getFunction(getName());
-        List<Expression> arguments = new ArrayList<>();
-        for (int i = getArguments().size() - 1; i >= 0; i--) {
-            arguments.add(getArguments().get(i));
-        }
-        List<Object> args = (List<Object>) (List<?>) arguments;
-        function.invoke(runtime, args);
+    public void execute(CatscriptRuntime runtime)
+    {
+        expression.evaluate(runtime);
     }
 
     @Override
@@ -50,10 +43,6 @@ public class FunctionCallStatement extends Statement {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        // compile FCE
-
-        // function foo() : int { return 10 }
-
-        // if the FCE is NOT void, we need to pop the value off the stack, Opcodes.POP
+        expression.compile(code);
     }
 }

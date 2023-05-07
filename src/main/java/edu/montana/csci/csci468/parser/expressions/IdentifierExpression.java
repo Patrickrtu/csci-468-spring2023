@@ -6,7 +6,6 @@ import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ErrorType;
 import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
-import edu.montana.csci.csci468.tokenizer.Token;
 import org.objectweb.asm.Opcodes;
 
 public class IdentifierExpression extends Expression {
@@ -52,17 +51,23 @@ public class IdentifierExpression extends Expression {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        Integer slot = code.resolveLocalStorageSlotFor(name);
-        if (slot == null) {
-            // global variable
-            // distinguish between primitives and non-primitives
-            // push on this pointer
-            // load field
-            // Opcodes.GETFIELD
-        } else {
-            // local variable
-            // distinguish between primitives and non-primitives
-            // Opcodes.ILOAD or Opcodes.ALOAD, use slot
+        Integer integer = code.resolveLocalStorageSlotFor(name);
+        if (integer != null) {
+            if (getType().equals(CatscriptType.INT) || getType().equals(CatscriptType.BOOLEAN)) {
+                code.addVarInstruction(Opcodes.ILOAD, integer);
+            }
+            else { code.addVarInstruction(Opcodes.ALOAD, integer); }
+        }
+        else {
+            code.addVarInstruction(Opcodes.ALOAD, 0);
+            if (getType().equals(CatscriptType.INT) || getType().equals(CatscriptType.BOOLEAN)) {
+                code.addFieldInstruction(Opcodes.GETFIELD, name, "I",code.getProgramInternalName());
+            }
+            else {
+                code.addFieldInstruction(Opcodes.GETFIELD, name, "L" +
+                    ByteCodeGenerator.internalNameFor(getType().getJavaType()) + ";",
+                    code.getProgramInternalName());
+            }
         }
     }
 

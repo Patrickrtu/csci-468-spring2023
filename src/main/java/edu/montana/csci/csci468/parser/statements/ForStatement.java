@@ -10,7 +10,6 @@ import edu.montana.csci.csci468.parser.expressions.Expression;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -78,7 +77,6 @@ public class ForStatement extends Statement {
     @Override
     public void execute(CatscriptRuntime runtime) {
         Iterable listToIterateOver = (Iterable) expression.evaluate(runtime);
-        // push a scope
         runtime.pushScope();
         for (Object currentValue : listToIterateOver) {
             runtime.setValue(variableName, currentValue);
@@ -96,55 +94,44 @@ public class ForStatement extends Statement {
 
     @Override
     public void compile(ByteCodeGenerator code) {
-        // First, allocate a slot for the iterator
         Integer iteratorSlot = code.nextLocalStorageSlot();
-        Label forLoopStart = new Label();
-        Label forLoopEnd = new Label();
-        // for (x in [1,2,3])
-        // leave pointer to the list literal on the stack
+        Label iterationStart = new Label();
+        Label end = new Label();
+
         expression.compile(code);
-        // next, invoke the iterator method on the pointer
-        // List foo = new ArrayList();
-        // foo.iterator();
-        // because iterator() is defined on an interface, so the bytecode instruction is INVOKEINTERFACE
-        code.addMethodInstruction(Opcodes.INVOKEINTERFACE, ByteCodeGenerator.internalNameFor(List.class),
+        code.addMethodInstruction(Opcodes.INVOKEINTERFACE,
+                ByteCodeGenerator.internalNameFor(List.class),
                 "iterator", "()Ljava/util/Iterator;");
-        // next, we want to store the iterator into iteratorSlot
         code.addVarInstruction(Opcodes.ASTORE, iteratorSlot);
 
-//        List l = new ArrayList();
-//        Iterator iterator = l.iterator();
-//        iterator.hasNext();
+        code.addLabel(iterationStart);
 
-
-
-        // start the loop
-        code.addLabel(forLoopStart);
-        // put the iterator back onto the stack
         code.addVarInstruction(Opcodes.ALOAD, iteratorSlot);
-        code.addMethodInstruction(Opcodes.INVOKEINTERFACE, ByteCodeGenerator.internalNameFor(Iterator.class),
-                "hasNext", "()Z");
+        code.addMethodInstruction(Opcodes.INVOKEINTERFACE,
+                ByteCodeGenerator.internalNameFor(Iterator.class), "hasNext", "()Z");
+        code.addJumpInstruction(Opcodes.IFEQ, end);
 
-        // then, do an IFEQ
-        code.addJumpInstruction(Opcodes.IFEQ, forLoopEnd);
-
-        // invoke next() on the iterator
-        code.addMethodInstruction(Opcodes.INVOKEINTERFACE, ByteCodeGenerator.internalNameFor(Iterator.class),
+        CatscriptType componenetType = getComponentType();
+        code.addVarInstruction(Opcodes.ALOAD, iteratorSlot);
+        code.addMethodInstruction(Opcodes.INVOKEINTERFACE,
+                ByteCodeGenerator.internalNameFor(Iterator.class),
                 "next", "()Ljava/lang/Object;");
-        String loopVariableTypeInternalName = ByteCodeGenerator.internalNameFor(getComponentType().getJavaType());
-        code.addTypeInstruction(Opcodes.CHECKCAST, loopVariableTypeInternalName);
-        unbox(code, getComponentType());
+        code.addTypeInstruction(Opcodes.CHECKCAST,
+                ByteCodeGenerator.internalNameFor(componenetType.getJavaType()));
+        unbox(code, componenetType);
 
-        Integer loopVarSlot = code.createLocalStorageSlotFor(variableName);
-        // TODO: store the value into loopVarSlot, similar to the code in varStatement
-        // either code.addVarInstruction(Opcodes.ASTORE, loopVarSlot); or code.addVarInstruction(Opcodes.ISTORE, loopVarSlot);
-        // depending on whether the value is primitive or non-primitive
+        Integer localStorageSlotFor = code.createLocalStorageSlotFor(variableName);
 
-        for (Statement statement : body) {
-            statement.compile(code);
+        if (componenetType == CatscriptType.INT || componenetType == CatscriptType.BOOLEAN) {
+            code.addVarInstruction(Opcodes.ISTORE, localStorageSlotFor);
+        } else {
+            code.addVarInstruction(Opcodes.ASTORE, localStorageSlotFor);
         }
-
-        code.addLabel(forLoopEnd);
+        for (Statement stmt : body) {
+            stmt.compile(code);
+        }
+        code.addJumpInstruction(Opcodes.GOTO, iterationStart);
+        code.addLabel(end);
     }
 
 }

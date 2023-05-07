@@ -46,22 +46,7 @@ public class AdditiveExpression extends Expression {
                 rightHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
             }
         }
-        // TODO handle strings
-//        if (getType().equals(CatscriptType.INT)) {
-//            if (!leftHandSide.getType().equals(CatscriptType.INT)) {
-//                leftHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
-//            }
-//            if (!rightHandSide.getType().equals(CatscriptType.INT)) {
-//                rightHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
-//            }
-//        } else {
-//            if (!leftHandSide.getType().equals(CatscriptType.INT) && !leftHandSide.getType().equals(CatscriptType.STRING)) {
-//                leftHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
-//            }
-//            if (!rightHandSide.getType().equals(CatscriptType.INT) && !rightHandSide.getType().equals(CatscriptType.STRING)) {
-//                rightHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
-//            }
-//        }
+        // TODO: handle strings
     }
 
     @Override
@@ -84,22 +69,23 @@ public class AdditiveExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        if (getType().equals(CatscriptType.STRING)) {
+        if(getType().equals(CatscriptType.STRING))
+        {
             Object lhs = leftHandSide.evaluate(runtime);
             Object rhs = rightHandSide.evaluate(runtime);
-            if (isAdd()) {
-                String s;
-                return s = "" + lhs + rhs;
+            if(isAdd())
+            {
+                return "" + lhs + rhs;
             } else {
                 return null;
             }
         } else {
-            Integer integerLHSValue = (Integer) leftHandSide.evaluate(runtime);
-            Integer integerRHSValue = (Integer) rightHandSide.evaluate(runtime);
+            Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
+            Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
             if (isAdd()) {
-                return integerLHSValue + integerRHSValue;
+                return lhsValue + rhsValue;
             } else {
-                return integerLHSValue - integerRHSValue;
+                return lhsValue - rhsValue;
             }
         }
     }
@@ -144,6 +130,5 @@ public class AdditiveExpression extends Expression {
             }
         }
     }
-
 
 }

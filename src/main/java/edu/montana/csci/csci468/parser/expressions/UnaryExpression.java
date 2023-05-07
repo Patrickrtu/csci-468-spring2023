@@ -30,7 +30,7 @@ public class UnaryExpression extends Expression {
     }
 
     public boolean isNot() {
-        return operator.getType().equals(TokenType.NOT);
+        return !isMinus();
     }
 
     @Override
@@ -66,8 +66,8 @@ public class UnaryExpression extends Expression {
         Object rhsValue = getRightHandSide().evaluate(runtime);
         if (this.isMinus()) {
             return -1 * (Integer) rhsValue;
-        } else if (this.isNot()) {
-            return !(Boolean) rhsValue;
+        } else if(this.isNot()) {
+            return rhsValue.equals(false);
         } else {
             return null;
         }
@@ -78,27 +78,8 @@ public class UnaryExpression extends Expression {
         super.transpile(javascript);
     }
 
-//    testUnary(I)V
-//    L0
-//    LINENUMBER 10 L0
-//    GETSTATIC java/lang/System.out : Ljava/io/PrintStream;
-//    ILOAD 1
-//    INEG
-//    INVOKEVIRTUAL java/io/PrintStream.println (I)V
-//            L1
-//    LINENUMBER 11 L1
-//            RETURN
-//    L2
-//    LOCALVARIABLE this Ledu/montana/csci/csci468/demo/Scratch; L0 L2 0
-//    LOCALVARIABLE i I L0 L2 1
-//    MAXSTACK = 2
-//    MAXLOCALS = 2
     @Override
     public void compile(ByteCodeGenerator code) {
-        // a lot like what we did in comparison
-        // compare if the thing is true or not, and invert it
-        // or if it's a negative, multiply by -1, and push a constant ?imul operator?
-
         getRightHandSide().compile(code);
 
         if (isMinus()) {
@@ -107,15 +88,5 @@ public class UnaryExpression extends Expression {
             code.pushConstantOntoStack(true);
             code.addInstruction(Opcodes.IXOR);
         }
-        // <lhs>
-        // <rhs>
-
-        // if_icmpge PUSH_FALSE
-        // PUSH TRUE
-        // GOTO END_LABEL
-        // PUSH_FALSE PUSH FALSE
-        // END LABEL
     }
-
-
 }

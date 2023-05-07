@@ -73,19 +73,16 @@ public class ComparisonExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        Object lhs = leftHandSide.evaluate(runtime);
-        Object rhs = rightHandSide.evaluate(runtime);
-        Integer lhsValue = (Integer) lhs;
-        Integer rhsValue = (Integer) rhs;
-
-        if (isGreater()) {
-            return lhsValue > rhsValue;
-        } else if (isLessThan()) {
-            return lhsValue < rhsValue;
-        } else if (isGreaterThanOrEqual()) {
-            return lhsValue >= rhsValue;
-        } else if (isLessThanOrEqual()) {
-            return lhsValue <= rhsValue;
+        Integer LHSValue = (Integer) leftHandSide.evaluate(runtime);
+        Integer RHSValue = (Integer) rightHandSide.evaluate(runtime);
+        if(this.isGreater()) {
+            return LHSValue > RHSValue;
+        } else if(this.isGreaterThanOrEqual()) {
+            return LHSValue >= RHSValue;
+        } else if(this.isLessThan()) {
+            return LHSValue < RHSValue;
+        } else if(this.isLessThanOrEqual()) {
+            return LHSValue <= RHSValue;
         } else {
             return null;
         }
@@ -100,9 +97,9 @@ public class ComparisonExpression extends Expression {
     public void compile(ByteCodeGenerator code) {
         getLeftHandSide().compile(code);
         getRightHandSide().compile(code);
+
         Label setTrue = new Label();
         Label endLabel = new Label();
-
         // if the comparison passes, we'll push true on the stack, otherwise jump over that and push false
         if (isGreater()) {
             code.addJumpInstruction(Opcodes.IF_ICMPGT, setTrue);
